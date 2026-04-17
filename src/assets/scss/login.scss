@@ -1,0 +1,80 @@
+.login-card {
+    width: 100%;
+    max-width: 360px;
+    border-radius: $border-radius-card;
+    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    background-color: $color-bg-card;
+}
+
+.login-card-header {
+    background-color: $color-bg-card;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 24px 24px;
+
+    img {
+        width: 64px;
+        height: 64px;
+    }
+}
+
+.login-card-body {
+    background: $color-primary;
+    padding: 28px 24px 32px;
+    border-radius: 70px 0 0 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// .login-form-field {
+//   display: flex;
+//   flex-direction: column;
+ 
+//   label {
+//     font-size: 13px;
+//     font-weight: 600;
+//     color: $color-text-body;
+//     margin-bottom: 2px;
+//     padding: 12px 16px 0;
+//     background: $color-bg-card;
+//     border-radius: $border-radius-input $border-radius-input 0 0;
+//   }
+ 
+//   input {
+//     @include input-base;
+//     border-radius: 0 0 $border-radius-input $border-radius-input;
+//     padding-top: 4px;
+//   }
+ 
+//   // Compact card style (label inside same rounded box as input)
+//   &--combined {
+//     background: $color-bg-card;
+//     border-radius: $border-radius-input;
+//     padding: 10px 16px 12px;
+ 
+//     label {
+//       background: transparent;
+//       border-radius: 0;
+//       padding: 0;
+//       margin-bottom: 4px;
+//       display: block;
+//     }
+ 
+//     input {
+//       background: transparent;
+//       border-radius: 0;
+//       padding: 0;
+//       font-size: 14px;
+ 
+//       &:focus {
+//         box-shadow: none;
+//       }
+//     }
+//   }
+// }
