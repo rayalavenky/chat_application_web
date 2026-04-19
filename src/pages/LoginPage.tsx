@@ -28,13 +28,12 @@ const LoginPage = () => {
           </p>
 
           <div className="login-form">
-            <div className="margin-top-1">
+            <div className="margin-bottom-16">
               <TextField
                 id="outlined-basic"
                 label="Email"
                 type="email"
                 variant="outlined"
-                autoComplete="off"
                 className="input-field"
               />
             </div>
@@ -48,6 +47,36 @@ const LoginPage = () => {
                 className="input-field"
               />
             </div>
+          </div>
+          <div className="margin-top-16 remember-me-section">
+            <div>
+              <input
+                type="checkbox"
+                id="remember-me"
+                name="remember-me"
+                value="remember-me"
+                className="input-checkbox"
+              />
+              <label
+                htmlFor="remember-me"
+                className="input-label padding-left-8"
+              >
+                Remember me
+              </label>
+            </div>
+            <div>
+              <a href="/forgot-password" className="text-link">Forgot password?</a>
+            </div>
+          </div>
+          <div className="login-button-section">
+            <button className="primary-button">Login</button>
+          </div>
+
+          <div className="card__footer">
+            Don't have an account?{" "}
+            <a href="/register" className="text-link">
+              Register Now
+            </a>
           </div>
         </div>
       </main>

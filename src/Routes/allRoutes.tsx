@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
+const ChatPage = lazy(() => import('../pages/ChatPage'));
 
 const AllRoutes = () => {
   return (
@@ -10,6 +11,7 @@ const AllRoutes = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path='/chats' element={<ChatPage />} />
       </Routes>
     </Suspense>
   );

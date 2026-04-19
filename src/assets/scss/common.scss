@@ -187,7 +187,7 @@ input {
 .input-field input:-webkit-autofill:hover,
 .input-field input:-webkit-autofill:focus,
 .input-field input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 100px #000 inset !important; /* background */
+  -webkit-box-shadow: 0 0 0 100px transparent inset !important; /* background */
   -webkit-text-fill-color: #fff !important;             /* text color */
   border-radius: 12px !important;
   transition: background-color 5000s ease-in-out 0s;
@@ -195,30 +195,58 @@ input {
 
 .input-field {
   width: 100%;
+
   .MuiInputBase-input {
-    color: #fff;
+    color: $color-text-white;
   }
 
   .MuiInputLabel-root {
-    color: #fff;
-    border-radius: "12px";
-    border-width: "1px";
+    color:  var(--text-muted);
   }
 
   .MuiOutlinedInput-root {
+    border-radius: 12px; // 👈 radius should be here
+
     fieldset {
-      border-color: #fff;
-      border-width: "1px";
+      border-color: var(--input-border);
+      border-width: 1px !important; // ✅ no quotes
     }
 
     &:hover fieldset {
-      border-color: #fff;
-      border-width: "1px";
+      border-color: var(--input-border);
+      border-width: 1px !important;
     }
 
     &.Mui-focused fieldset {
-      border-color: #fff;
-      border-width: "1px";
-    }
+      border-color: var(--input-border);
+      border-width: 1px !important;
+    } 
   }
+}
+
+.input-checkbox {
+    background-color: transparent;
+}
+
+.input-checkbox:checked {
+  background-color: $color-primary;
+}
+
+.input-label {
+  color: var(--text-muted);
+}
+
+.primary-button {
+    width: 100%;
+    background-color:  var(--purple-light);
+    color: $color-text-white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: $border-radius-btn;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--purple-pale);
+    }
 }

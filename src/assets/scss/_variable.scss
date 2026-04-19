@@ -105,3 +105,9 @@ $transition-base: 0.25s ease-in-out;
     padding-right: #{$i}px;
   }
 }
+
+@for $i from 1 through 50 {
+  .border-radius-#{$i} {
+    border-radius: #{$i}px;
+  }
+}
