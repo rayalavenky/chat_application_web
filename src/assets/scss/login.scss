@@ -1,80 +1,99 @@
-.login-card {
-    width: 100%;
-    max-width: 360px;
-    border-radius: $border-radius-card;
-    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
-    background-color: $color-bg-card;
-}
-
-.login-card-header {
-    background-color: $color-bg-card;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 32px 24px 24px;
-
-    img {
-        width: 64px;
-        height: 64px;
-    }
-}
-
-.login-card-body {
-    background: $color-primary;
-    padding: 28px 24px 32px;
-    border-radius: 70px 0 0 0;
-}
-
-.login-form {
+// ─── Center layout ───────────────────────────────────────────
+.center {
+  position: relative;
+  z-index: 10;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 16px 48px;
+  min-height: calc(100vh - 66px);
 }
 
-// .login-form-field {
-//   display: flex;
-//   flex-direction: column;
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 32px 36px 36px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(124, 77, 255, 0.08),
+    0 8px 40px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
  
-//   label {
-//     font-size: 13px;
-//     font-weight: 600;
-//     color: $color-text-body;
-//     margin-bottom: 2px;
-//     padding: 12px 16px 0;
-//     background: $color-bg-card;
-//     border-radius: $border-radius-input $border-radius-input 0 0;
-//   }
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
  
-//   input {
-//     @include input-base;
-//     border-radius: 0 0 $border-radius-input $border-radius-input;
-//     padding-top: 4px;
-//   }
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg ellipse { animation: orbitSpin 6s linear infinite; transform-origin: center; }
+  }
  
-//   // Compact card style (label inside same rounded box as input)
-//   &--combined {
-//     background: $color-bg-card;
-//     border-radius: $border-radius-input;
-//     padding: 10px 16px 12px;
+  &__brand-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
  
-//     label {
-//       background: transparent;
-//       border-radius: 0;
-//       padding: 0;
-//       margin-bottom: 4px;
-//       display: block;
-//     }
+  &__brand-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--text-primary);
+  }
  
-//     input {
-//       background: transparent;
-//       border-radius: 0;
-//       padding: 0;
-//       font-size: 14px;
+  &__brand-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
  
-//       &:focus {
-//         box-shadow: none;
-//       }
-//     }
-//   }
-// }
+  &__title {
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+ 
+    &--accent {
+      color: var(--purple-light);
+    }
+  }
+ 
+  &__subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 28px;
+    max-width: 300px;
+  }
+ 
+  &__footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+ 
+  &__footer-link {
+    color: var(--text-primary);
+    font-weight: 600;
+    text-decoration: none;
+    &:hover { color: var(--purple-pale); }
+  }
+}
+
+.orbittalk-icon {
+  width: 60px;
+  height: 60px;
+}
+

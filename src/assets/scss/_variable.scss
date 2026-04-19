@@ -1,35 +1,107 @@
-
-// status colors
-$Success:   #20C997;   /* Reuses primary — natural fit */
-$Warning:   #F5A623;
-$Error:     #E84040;
-$Info:      #1A8FD1;
-
-// borders
-$Border:   #C5EDE0;   /* Light mint-green tint */
-$Divider:  #A8DFD0;
+// ── Status Colors (Adjusted to Galaxy Tone) ──────────
+$Success:   #22C55E;   // Neon green (kept for contrast)
+$Warning:   #F59E0B;   // Warm amber
+$Error:     #EF4444;   // Soft red
+$Info:      #60A5FA;   // Slightly softer blue (fits purple UI better)
 
 
-// ── Brand Colors ──────────────────────────────────────
-$color-primary:        #1E7A5A;   // Main card background (primary green)
-$color-primary-dark:   #1A5C42;   // Darker leaf / logo icon
-$color-primary-light:  #7DBE6A;   // Lighter leaf / logo icon
+// ── Borders ─────────────────────────────────────────
+$Border:   rgba(124, 77, 255, 0.18);  // Matches --card-border
+$Divider:  rgba(124, 77, 255, 0.28);  // Slightly stronger
 
-// ── Backgrounds ───────────────────────────────────────
-$color-bg-page:        #C8E6B0;   // Outer page background (mint green)
-$color-bg-card:        #F5F0E8;   // Card top & input fields (warm off-white)
 
-// ── Text ──────────────────────────────────────────────
-$color-text-primary:   #FFFFFF;   // White text on green surfaces
-$color-text-body:      #2C2C2C;   // Input label / body text
-$color-text-placeholder: #888888; // Placeholder / hint text
+// ── Brand Colors (From :root) ───────────────────────
+$color-primary:        #7C4DFF;   // --purple-vivid ⭐
+$color-primary-dark:   #5A35D6;   // Derived darker shade
+$color-primary-light:  #9B6DFF;   // --purple-light
+$color-primary-pale:   #C4B0FF;   // --purple-pale
 
-// ── UI Elements ───────────────────────────────────────
-$color-button:         #1A1A1A;   // Button fill & bold headings
-$color-link-accent:    #E07A3A;   // Links — "Forgot password?", "Sign Up"
 
-$font-primary:            'Poppins', sans-serif;
+// ── Backgrounds ─────────────────────────────────────
+$color-bg-page:        #0B0A1A;   // --bg-deep
+$color-bg-secondary:   #0F0D2A;   // --bg-mid
+$color-bg-card:        rgba(14, 12, 36, 0.82); // --card-bg
 
-$border-radius-card:      24px;
-$border-radius-input:     12px;
-$border-radius-btn:       14px;
+
+// ── Inputs ──────────────────────────────────────────
+$color-input-bg:       rgba(255, 255, 255, 0.04);
+$color-input-border:   rgba(255, 255, 255, 0.10);
+
+
+// ── Text ────────────────────────────────────────────
+$color-text-primary:     #F0ECFF;                // --text-primary
+$color-text-body:        rgba(200,190,240,0.75); // slightly stronger than muted
+$color-text-muted:       rgba(200,190,240,0.55); // --text-muted
+$color-text-dim:         rgba(200,190,240,0.35); // --text-dim
+$color-text-placeholder: rgba(200,190,240,0.40);
+
+
+// ── UI Elements ─────────────────────────────────────
+$color-button:         #7C4DFF;   // primary
+$color-button-hover:   #9B6DFF;   // hover state
+$color-link-accent:    #C4B0FF;   // soft link color
+$color-glow:           rgba(124, 77, 255, 0.35); // --purple-glow
+
+
+// ── Typography ──────────────────────────────────────
+$font-primary: 'Poppins', sans-serif;
+
+
+// ── Border Radius ───────────────────────────────────
+$border-radius-card: 20px;
+$border-radius-input: 12px;
+$border-radius-btn: 14px;
+
+
+// ── Extra ───────────────────────────────────────────
+$color-text-white: #FFFFFF;
+
+$transition-base: 0.25s ease-in-out;
+
+@for $i from 1 through 50 {
+  .margin-top-#{$i} {
+    margin-top: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .margin-bottom-#{$i} {
+    margin-bottom: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .margin-left-#{$i} {
+    margin-left: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .margin-right-#{$i} {
+    margin-right: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .padding-top-#{$i} {
+    padding-top: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .padding-bottom-#{$i} {
+    padding-bottom: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .padding-left-#{$i} {
+    padding-left: #{$i}px;
+  }
+}
+
+@for $i from 1 through 50 {
+  .padding-right-#{$i} {
+    padding-right: #{$i}px;
+  }
+}

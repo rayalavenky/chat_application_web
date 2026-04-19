@@ -1,16 +1,16 @@
-// import _variable.scss
+// // import _variable.scss
 @import "./assets/scss/_variable.scss";
 @import "./assets/scss/login.scss";
 @import "./assets/scss/common.scss";
 
+// .orbitalk-bg {
+//   background-color: $color-bg-page;
+//   min-height: 100vh;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   font-family: $font-primary;
+//   padding: 24px 16px;
+//   box-sizing: border-box;
+// }
 
-.orbitalk-bg {
-  background-color: $color-bg-page;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: $font-primary;
-  padding: 24px 16px;
-  box-sizing: border-box;
-}
