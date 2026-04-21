@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Orbitalk from "../assets/images/Icon.png";
-import TextField from "@mui/material/TextField";
+import {TextField,IconButton,InputAdornment } from "@mui/material";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLoginMutation } from "../services/AuthApi";
@@ -13,6 +15,12 @@ const LoginPage = () => {
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -29,9 +37,15 @@ const LoginPage = () => {
       console.log(values);
       try {
         const response = await login(values).unwrap();
-        if(response?.status === "success") {
+        if (response?.status === "success") {
           toast.success(response?.message);
-          dispatch(setUser({userData: response?.data, token: response?.data?.token}));
+          dispatch(
+            setUser({
+              userData: response?.data,
+              accessToken: response?.data?.accessToken,
+              refreshToken: response?.data?.refreshToken,
+            }),
+          );
           formik.resetForm();
           navigate("/chats");
         }
@@ -83,8 +97,8 @@ const LoginPage = () => {
               <TextField
                 id="outlined-basic"
                 label="Password"
-                name= "password"
-                type="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -95,6 +109,17 @@ const LoginPage = () => {
                 variant="outlined"
                 autoComplete="off"
                 className="input-field"
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleTogglePassword} edge="end" style={{color: 'white'}}>
+                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
             </div>
             <div className="margin-top-16 remember-me-section">

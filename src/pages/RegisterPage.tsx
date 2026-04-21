@@ -20,18 +20,30 @@ const RegisterPage = () => {
       age: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First name is required"),
-      lastName: Yup.string().required("Last name is required"),
-      email: Yup.string()
-        .email("Invalid email format")
-        .required("Email is required"),
-      phoneNumber: Yup.string()
-        .matches(/^[0-9]{10}$/, "Enter valid phone number")
-        .required("Phone number is required"),
-      age: Yup.number()
-        .typeError("Age must be a number")
-        .required("Age is required"),
-    }),
+  firstName: Yup.string()
+    .min(3, "Minimum 3 characters")
+    .max(10, "Maximum 10 characters")
+    .required("First name is required"),
+
+  lastName: Yup.string()
+    .min(3, "Minimum 3 characters")
+    .max(10, "Maximum 10 characters")
+    .required("Last name is required"),
+
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
+
+  phoneNumber: Yup.string()
+    .matches(/^[0-9]{10}$/, "Enter valid 10-digit phone number")
+    .required("Phone number is required"),
+
+  age: Yup.number()
+    .typeError("Age must be a number")
+    .min(18, "You must be at least 18 years old")
+    .max(120, "Enter a valid age")
+    .required("Age is required"),
+}),
 
     onSubmit: async (values) => {
       const payload = {
@@ -86,6 +98,12 @@ const RegisterPage = () => {
                 }
                 helperText={formik.touched.firstName && formik.errors.firstName}
                 className="input-field"
+                slotProps={{
+                  htmlInput: {
+                    minLength: 3,
+                    maxLength: 10,
+                  },
+                }}
               />
             </div>
 
@@ -102,6 +120,12 @@ const RegisterPage = () => {
                 }
                 helperText={formik.touched.lastName && formik.errors.lastName}
                 className="input-field"
+                slotProps={{
+                  htmlInput: {
+                    minLength: 3,
+                    maxLength: 10,
+                  },
+                }}
               />
             </div>
 
@@ -125,8 +149,12 @@ const RegisterPage = () => {
                 label="Phone Number"
                 name="phoneNumber"
                 autoComplete="off"
+                type="number"
                 value={formik.values.phoneNumber}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  formik.setFieldValue("phoneNumber", digits);
+                }}
                 onBlur={formik.handleBlur}
                 error={
                   formik.touched.phoneNumber &&
@@ -145,7 +173,10 @@ const RegisterPage = () => {
                 name="age"
                 type="number"
                 value={formik.values.age}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, "").slice(0, 3);
+                  formik.setFieldValue("age", digits);
+                }}
                 onBlur={formik.handleBlur}
                 error={formik.touched.age && Boolean(formik.errors.age)}
                 helperText={formik.touched.age && formik.errors.age}

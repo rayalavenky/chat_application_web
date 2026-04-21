@@ -2,26 +2,30 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
     userData: any;
-    token: string;
+    accessToken: string;
+    refreshToken: string;
 }
 
 const initialState: UserState = {
     userData: null,
-    token: ""
+    accessToken: "",
+    refreshToken : ""
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser : (state, action: PayloadAction<{userData: any, token: string}>)=> {
+        setUser : (state, action: PayloadAction<{userData: any, accessToken: string, refreshToken: string}>)=> {
             state.userData = action.payload.userData;
-            state.token = action.payload.token;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken
         },
 
         clearUser: (state) => {
             state.userData = null;
-            state.token = "";
+            state.accessToken = "";
+            state.refreshToken = "";
         }
     }
 })

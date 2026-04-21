@@ -1,33 +1,75 @@
 // services/authApi.ts
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8080/api/auth/',
-  }),
+import { api } from "./api";
+
+export interface userData {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  age: number;
+  role: string;
+  isOnline: boolean;
+  lastSeen: string;
+  createdAt: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface LoginResponse {
+  data: userData;
+  message: string;
+  status: string;
+}
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+interface SignUpData {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  age: number;
+  isOnline: boolean;
+  lastSeen: string;
+  createdAt: string;
+}
+interface SignUpResponse {
+  data: SignUpData;
+  message: string;
+  status: string;
+}
+
+interface SignUpRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  age: number;
+}
+
+export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    
-    login: builder.mutation({
+    login: builder.mutation<LoginResponse, LoginRequest>({
       query: (data) => ({
-        url: 'login',
-        method: 'POST',
+        url: "auth/login",
+        method: "POST",
         body: data,
       }),
     }),
 
-    register: builder.mutation({
+    register: builder.mutation<SignUpResponse, SignUpRequest>({
       query: (data) => ({
-        url: 'register',
-        method: 'POST',
+        url: "auth/register",
+        method: "POST",
         body: data,
       }),
     }),
-
   }),
 });
 
-export const {
-  useLoginMutation,
-  useRegisterMutation,
-} = authApi;
+export const { useLoginMutation, useRegisterMutation } = authApi;

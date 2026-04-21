@@ -212,15 +212,24 @@ input {
       border-width: 1px !important; // ✅ no quotes
     }
 
-    &:hover fieldset {
+    &:hover:not(.Mui-error) fieldset {
       border-color: var(--input-border);
       border-width: 1px !important;
     }
 
-    &.Mui-focused fieldset {
+    &.Mui-focused:not(.Mui-error) fieldset {
       border-color: var(--input-border);
       border-width: 1px !important;
-    } 
+    }
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 }
 
