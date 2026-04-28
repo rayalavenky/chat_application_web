@@ -9,7 +9,7 @@ import { useLoginMutation } from "../services/AuthApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUser } from "../services/userSlice";
+import { setUser } from "../store/userSlice";
 
 const LoginPage = () => {
   const [login, { isLoading }] = useLoginMutation();
