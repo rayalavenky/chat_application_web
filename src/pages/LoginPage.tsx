@@ -47,7 +47,7 @@ const LoginPage = () => {
             }),
           );
           formik.resetForm();
-          navigate("/chats");
+          navigate("/user/chat");
         }
       } catch (err) {
         toast.error("Login failed");
