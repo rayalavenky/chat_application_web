@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Orbitalk from "../assets/images/Icon.png";
-import {TextField,IconButton,InputAdornment } from "@mui/material";
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { TextField, IconButton, InputAdornment } from "@mui/material";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLoginMutation } from "../services/AuthApi";
@@ -56,6 +56,12 @@ const LoginPage = () => {
   });
   return (
     <>
+      <header className="topbar">
+        <div className="topbar__brand">
+          <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
+          ORBITALK
+        </div>
+      </header>
       <main className="center">
         <div className="card">
           <div className="card__header">
@@ -113,8 +119,16 @@ const LoginPage = () => {
                   input: {
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton onClick={handleTogglePassword} edge="end" style={{color: 'white'}}>
-                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        <IconButton
+                          onClick={handleTogglePassword}
+                          edge="end"
+                          style={{ color: "white" }}
+                        >
+                          {showPassword ? (
+                            <VisibilityOffIcon />
+                          ) : (
+                            <VisibilityIcon />
+                          )}
                         </IconButton>
                       </InputAdornment>
                     ),

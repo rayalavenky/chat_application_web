@@ -20,30 +20,30 @@ const RegisterPage = () => {
       age: "",
     },
     validationSchema: Yup.object({
-  firstName: Yup.string()
-    .min(3, "Minimum 3 characters")
-    .max(10, "Maximum 10 characters")
-    .required("First name is required"),
+      firstName: Yup.string()
+        .min(3, "Minimum 3 characters")
+        .max(10, "Maximum 10 characters")
+        .required("First name is required"),
 
-  lastName: Yup.string()
-    .min(3, "Minimum 3 characters")
-    .max(10, "Maximum 10 characters")
-    .required("Last name is required"),
+      lastName: Yup.string()
+        .min(3, "Minimum 3 characters")
+        .max(10, "Maximum 10 characters")
+        .required("Last name is required"),
 
-  email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
+      email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
 
-  phoneNumber: Yup.string()
-    .matches(/^[0-9]{10}$/, "Enter valid 10-digit phone number")
-    .required("Phone number is required"),
+      phoneNumber: Yup.string()
+        .matches(/^[0-9]{10}$/, "Enter valid 10-digit phone number")
+        .required("Phone number is required"),
 
-  age: Yup.number()
-    .typeError("Age must be a number")
-    .min(18, "You must be at least 18 years old")
-    .max(120, "Enter a valid age")
-    .required("Age is required"),
-}),
+      age: Yup.number()
+        .typeError("Age must be a number")
+        .min(18, "You must be at least 18 years old")
+        .max(120, "Enter a valid age")
+        .required("Age is required"),
+    }),
 
     onSubmit: async (values) => {
       const payload = {
@@ -63,6 +63,12 @@ const RegisterPage = () => {
 
   return (
     <>
+      <header className="topbar">
+        <div className="topbar__brand">
+          <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
+          ORBITALK
+        </div>
+      </header>
       <main className="center">
         <div className="card">
           <div className="card__header">

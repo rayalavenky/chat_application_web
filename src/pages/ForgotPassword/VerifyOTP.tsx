@@ -115,6 +115,12 @@ const VerifyOTP = () => {
 
   return (
     <>
+    <header className="topbar">
+            <div className="topbar__brand">
+              <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
+              ORBITALK
+            </div>
+          </header>
       <main className="center">
         <div className="card forgot-card">
           <div className="card__header">

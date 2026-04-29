@@ -7,6 +7,7 @@ const ChatPage = lazy(() => import('../pages/ChatPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPassword/ForgotPassword'));
 const VerifyOTPPage = lazy(() => import('../pages/ForgotPassword/VerifyOTP'));
 const ResetPasswordPage = lazy(() => import('../pages/ForgotPassword/ResetPassword'));
+const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
 
 const AllRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const AllRoutes = () => {
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/verify-otp' element={<VerifyOTPPage />} />
         <Route path='/reset-password' element={<ResetPasswordPage />} />
+        <Route path='/home' element={<HomePage />} />
       </Routes>
     </Suspense>
   );
