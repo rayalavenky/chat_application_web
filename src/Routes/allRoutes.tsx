@@ -3,11 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const RegisterPage = lazy(() => import('../pages/RegisterPage'));
-const ChatPage = lazy(() => import('../pages/ChatPage'));
+const ChatPage = lazy(() => import('../pages/HomePage/ChatPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPassword/ForgotPassword'));
 const VerifyOTPPage = lazy(() => import('../pages/ForgotPassword/VerifyOTP'));
 const ResetPasswordPage = lazy(() => import('../pages/ForgotPassword/ResetPassword'));
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
+const Contact = lazy(() => import('../pages/Contact'));
 
 const AllRoutes = () => {
   return (
@@ -15,11 +16,13 @@ const AllRoutes = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path='/chats' element={<ChatPage />} />
         <Route path='/forgot-password' element={<ForgotPasswordPage />} />
         <Route path='/verify-otp' element={<VerifyOTPPage />} />
         <Route path='/reset-password' element={<ResetPasswordPage />} />
-        <Route path='/home' element={<HomePage />} />
+        <Route path='/user' element={<HomePage />}>
+          <Route path="chat" element={<ChatPage />} />
+          <Route path="contacts" element={<Contact />} />
+        </Route>
       </Routes>
     </Suspense>
   );

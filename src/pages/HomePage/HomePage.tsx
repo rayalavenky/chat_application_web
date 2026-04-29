@@ -1,23 +1,19 @@
 import Grid from "@mui/material/Grid";
 import React from "react";
 import SideBar from "./SideBar";
-import ChatList from "./ChatList";
-import ChatArea from "./ChatArea";
+import { Outlet } from "react-router-dom";
 
 const HomePage = () => {
+  const [activeMenu, setActiveMenu] = React.useState<string>("chat");
   return (
     <div className="home">
       <Grid container spacing={0} sx={{ height: "100%" }}>
         <Grid size={2} sx={{ height: "100%" }}>
-          <SideBar />
+          <SideBar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
         </Grid>
 
-        <Grid size={2} sx={{ height: "100%" }}>
-          <ChatList />
-        </Grid>
-
-        <Grid size={8} sx={{ height: "100%" }}>
-          <ChatArea />
+        <Grid size={10} sx={{ height: "100%" }}>
+          <Outlet />
         </Grid>
       </Grid>
     </div>

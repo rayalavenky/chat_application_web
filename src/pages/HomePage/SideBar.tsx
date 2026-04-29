@@ -5,9 +5,15 @@ import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutline
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { useNavigate } from "react-router-dom";
 
-const SideBar = () => {
-  const [activeMenu, setActiveMenu] = useState<string>("chat");
+
+interface SideBarProps {
+  activeMenu: string;
+  setActiveMenu: (menu: string) => void;
+}
+const SideBar:React.FC<SideBarProps> = ({ activeMenu, setActiveMenu }) => {
+  const navigate = useNavigate();
   const menuItems = [
     {
       name: "chat",
@@ -26,6 +32,11 @@ const SideBar = () => {
       icon: <SettingsOutlinedIcon className="icon" />,
     },
   ];
+
+  const handleSelectMenu = (menu: string) => {
+    setActiveMenu(menu);
+    navigate(`/user/${menu}`);
+  };
   return (
     <Box className="sidebar">
       <div className="sidebar_header">
@@ -37,7 +48,7 @@ const SideBar = () => {
           <div
             key={item.name}
             className={`sidebar_menu_list ${activeMenu === item.name ? "active" : ""}`}
-            onClick={() => setActiveMenu(item.name)}
+            onClick={() => handleSelectMenu(item.name)}
           >
             <div className="sidebar_menu_icon">{item.icon}</div>
             <div className="sidebar_menu_item">
