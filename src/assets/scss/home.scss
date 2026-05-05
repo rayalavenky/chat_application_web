@@ -1,7 +1,8 @@
 .home {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   color: $color-text-white;
   background-color: transparent;
 }
@@ -172,7 +173,8 @@
 }
 
 .chat_area {
-  height : 100vh;
+  height: 100vh;
+  position: relative;
 
   &_header {
     height: 7vh;
@@ -181,7 +183,7 @@
     align-items: center;
     justify-content: space-between;
     padding-left: 10px;
-        padding-right: 10px;
+    padding-right: 10px;
 
     // justify-content: center;
     gap: 10px;
@@ -197,6 +199,56 @@
       align-items: center;
       gap: 15px;
     }
-
   }
+
+  &_body {
+    height: 87vh;
+    // background-color: #0a08118c;
+  }
+
+  &_footer {
+    height: 7vh;
+    background-color: #0303058c;
+    border: 1px solid $Border;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    // padding-bottom: 20px;
+    gap: 10px;
+
+    .search-input {
+      // flex: 1;
+      width: 100%;
+    }
+    .send-btn {
+      margin-left: 10px;
+    }
+  }
+}
+
+.emoji-picker {
+  position: absolute;
+  bottom: calc(7vh + 12px);
+  right: 20px;
+  z-index: 100;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  box-shadow: 0 0 30px rgba(124, 77, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  --epr-bg-color: #0f0d2a;
+  --epr-category-label-bg-color: #0b0a1a;
+  --epr-text-color: #f0ecff;
+  --epr-search-input-bg-color: rgba(255, 255, 255, 0.04);
+  --epr-search-input-text-color: #f0ecff;
+  --epr-search-input-border-color: rgba(124, 77, 255, 0.3);
+  --epr-search-input-placeholder-color: rgba(200, 190, 240, 0.4);
+  --epr-emoji-hover-color: rgba(124, 77, 255, 0.25);
+  --epr-highlight-color: #7c4dff;
+  --epr-border-color: rgba(124, 77, 255, 0.18);
+  --epr-category-icon-active-color: #7c4dff;
+  --epr-skin-tone-picker-menu-color: #0f0d2a;
 }

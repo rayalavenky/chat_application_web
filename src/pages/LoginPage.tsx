@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
+import Loader from "../components/Loader";
 
 const LoginPage = () => {
   const [login, { isLoading }] = useLoginMutation();
@@ -56,6 +57,7 @@ const LoginPage = () => {
   });
   return (
     <>
+      {isLoading && <Loader />}
       <header className="topbar">
         <div className="topbar__brand">
           <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />

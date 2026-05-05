@@ -1,10 +1,17 @@
 import Grid from "@mui/material/Grid";
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from "./SideBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const HomePage = () => {
-  const [activeMenu, setActiveMenu] = React.useState<string>("chat");
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = React.useState<string>("");
+
+  useEffect(() => {
+    const path = location.pathname.split("/");
+    setActiveMenu(path[path.length - 1]);
+  }, [location]);
+
   return (
     <div className="home">
       <Grid container spacing={0} sx={{ height: "100%" }} >

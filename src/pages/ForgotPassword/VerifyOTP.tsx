@@ -3,9 +3,13 @@ import Orbitalk from "../../assets/images/Icon.png";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useForgotPasswordMutation, useVerifyOTPMutation } from "../../services/AuthApi";
+import {
+  useForgotPasswordMutation,
+  useVerifyOTPMutation,
+} from "../../services/AuthApi";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
 const OTP_LENGTH = 6;
 const INITIAL_SECONDS = 37;
@@ -20,7 +24,8 @@ const VerifyOTP = () => {
   const emailFromStore = useSelector(
     (state: any) => state.forgotPassword.email,
   );
-  const [forgotPassword, { isLoading : forgotPasswordLoading }] = useForgotPasswordMutation();
+  const [forgotPassword, { isLoading: forgotPasswordLoading }] =
+    useForgotPasswordMutation();
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -102,25 +107,26 @@ const VerifyOTP = () => {
     }
   };
 
-    const handleForgotPassword = async () => {  
-      try {
-        const response = await forgotPassword({email : emailFromStore}).unwrap();
-        if (response?.status === "success") {
-          toast.success(response?.message);
-        }
-      } catch (err) {
-        toast.error("Failed to send recovery code");
+  const handleForgotPassword = async () => {
+    try {
+      const response = await forgotPassword({ email: emailFromStore }).unwrap();
+      if (response?.status === "success") {
+        toast.success(response?.message);
       }
-    };
+    } catch (err) {
+      toast.error("Failed to send recovery code");
+    }
+  };
 
   return (
     <>
-    <header className="topbar">
-            <div className="topbar__brand">
-              <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
-              ORBITALK
-            </div>
-          </header>
+      {isLoading && <Loader />}
+      <header className="topbar">
+        <div className="topbar__brand">
+          <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
+          ORBITALK
+        </div>
+      </header>
       <main className="center">
         <div className="card forgot-card">
           <div className="card__header">

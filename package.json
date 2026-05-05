@@ -15,6 +15,7 @@
     "ag-grid-community": "^35.2.1",
     "ag-grid-react": "^35.2.1",
     "bootstrap": "^5.3.8",
+    "emoji-picker-react": "^4.19.1",
     "formik": "^2.4.9",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
