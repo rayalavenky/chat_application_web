@@ -8,7 +8,7 @@ const ForgotPasswordPage = lazy(() => import('../pages/ForgotPassword/ForgotPass
 const VerifyOTPPage = lazy(() => import('../pages/ForgotPassword/VerifyOTP'));
 const ResetPasswordPage = lazy(() => import('../pages/ForgotPassword/ResetPassword'));
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
-const Contact = lazy(() => import('../pages/Contact'));
+const Contact = lazy(() => import('../pages/ContactsPage/Contact'));
 
 const AllRoutes = () => {
   return (

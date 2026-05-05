@@ -10,6 +10,7 @@ import { useForgotPasswordMutation } from "../../services/AuthApi";
 import { useDispatch } from "react-redux";
 import { setEmail } from "../../store/forgotEmailSlice";
 import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const ForgotPassword = () => {
 
   return (
     <>
+      {isLoading && <Loader />}
       <header className="topbar">
         <div className="topbar__brand">
           <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
