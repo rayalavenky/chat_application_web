@@ -7,7 +7,7 @@ const HomePage = () => {
   const [activeMenu, setActiveMenu] = React.useState<string>("chat");
   return (
     <div className="home">
-      <Grid container spacing={0} sx={{ height: "100%" }}>
+      <Grid container spacing={0} sx={{ height: "100%" }} >
         <Grid size={2} sx={{ height: "100%" }}>
           <SideBar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
         </Grid>

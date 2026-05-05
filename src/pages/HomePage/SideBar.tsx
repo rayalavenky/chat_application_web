@@ -31,6 +31,7 @@ const SideBar:React.FC<SideBarProps> = ({ activeMenu, setActiveMenu }) => {
       name: "settings",
       icon: <SettingsOutlinedIcon className="icon" />,
     },
+    
   ];
 
   const handleSelectMenu = (menu: string) => {

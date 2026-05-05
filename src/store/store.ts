@@ -1,14 +1,14 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { authApi } from '../services/AuthApi';
 import userReducer from './userSlice';
 import forgotEmailReducer from './forgotEmailSlice';
 
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import { api } from '../services/api';
 
 //  Combine reducers
 const rootReducer = combineReducers({
-  [authApi.reducerPath]: authApi.reducer,
+  [api.reducerPath]: api.reducer,
   user: userReducer,
   forgotPassword: forgotEmailReducer,
 });
@@ -18,7 +18,7 @@ const persistConfig = {
   key: 'root',
   storage,
   whitelist: ['user', 'forgotPassword'], 
-  //  DO NOT persist authApi (RTK Query cache)
+  //  DO NOT persist api (RTK Query cache)
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -29,8 +29,9 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // required for redux-persist
-    }).concat(authApi.middleware),
+    }).concat(api.middleware),
 });
 
 //  Persistor
 export const persistor = persistStore(store);
+export type RootState = ReturnType<typeof store.getState>;

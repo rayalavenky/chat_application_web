@@ -44,21 +44,21 @@ const ChatList = () => {
         <AddIcon className="icon" />
       </div>
       <div>
-         <TextField
-      fullWidth
-      placeholder="Search chat..."
-      variant="outlined"
-      className="search-input"
-      slotProps={{
-       input: {
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon className="search-icon" />
-            </InputAdornment>
-          ),
-        },
-      }}
-    />
+        <TextField
+          fullWidth
+          placeholder="Search chat..."
+          variant="outlined"
+          className="search-input"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon className="search-icon" />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
       </div>
       <div className="dm">
         <p className="dm__title">DIRECT MESSAGES</p>
