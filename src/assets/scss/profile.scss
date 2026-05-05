@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 .profile {
-  min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
   background:
     radial-gradient(circle at 20% 10%, rgba(124, 77, 255, 0.18), transparent 40%),
     radial-gradient(circle at 80% 0%, rgba(168, 85, 247, 0.18), transparent 45%),
@@ -309,6 +310,8 @@
 
   .activity {
     margin-top: 50px;
+    margin-bottom: 50px;
+    height: auto;
 
     .activity_row {
       display: flex;

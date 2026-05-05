@@ -4,27 +4,48 @@ interface UserRequest {
   id: string;
 }
 
-interface UserResponse {
-  data: {
-    user: { id: string; firstName: string; lastName: string; email: string };
-    accessToken: string;
-    refreshToken: string;
-    };
-    message: string;
-    status: string;
+export interface UserData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  age: number;
+  bio?: string;
 }
 
+interface UserResponse {
+  data: UserData;
+  message: string;
+  status: string;
+}
 
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
-     user: builder.mutation<UserResponse, UserRequest>({
-          query: ({id}) => ({
-            url: `users/${id}`,
-            method: "GET",
-          }),
-        }),
+    
+    // ✅ GET USER (use query, not mutation)
+    getUserById: builder.query<UserResponse, { id: string }>({
+      query: ({ id }) => ({
+        url: `users/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["UserProfile"],
+    }),
+
+    // ✅ UPDATE PROFILE
+    updateUserProfile: builder.mutation<UserResponse, Partial<UserData>>({
+      query: (data) => ({
+        url: "users/profile",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["UserProfile"],
+    }),
+
   }),
 });
 
-
-export const { useUserMutation } = userApi;
+export const {
+  useGetUserByIdQuery,
+  useUpdateUserProfileMutation,
+} = userApi;

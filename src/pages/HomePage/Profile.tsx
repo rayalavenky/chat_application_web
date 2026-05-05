@@ -1,5 +1,5 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
-import React, { use, useEffect } from "react";
+import React, { useState } from "react";
 import PublicIcon from "@mui/icons-material/Public";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
@@ -9,25 +9,34 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CustomModal from "../../components/commons/Modal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useUserMutation } from "../../services/userApi";
+import { UserData, useUpdateUserProfileMutation, useGetUserByIdQuery } from "../../services/userApi";
 import { useSelector } from "react-redux";
 import { useLogoutMutation } from "../../services/AuthApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
+
 
 const Profile = () => {
   const navigate = useNavigate();
-  const [userProfile, isLoading] = useUserMutation();
-  const [logoutUser, isLogoutLoading] = useLogoutMutation();
-  console.log(userProfile, "userProfile");
+  const loginUserID = useSelector((state: any) => state.user.userData?._id);
+  const { data: userProfileResponse , isLoading: isFetchingProfile} = useGetUserByIdQuery(
+    { id: loginUserID },
+    { skip: !loginUserID }
+  );
+  const [logoutUser , { isLoading: isLoggingOut }] = useLogoutMutation();
+  const [userProfileUpdate, { isLoading: isUpdating }] =
+    useUpdateUserProfileMutation();
+  const [open, setOpen] = useState<boolean>(false);
+  const profile: UserData = userProfileResponse?.data ?? ({} as UserData);
 
-  const loginUserID = useSelector((state: any) => state.user.userData._id);
 
   const constellations = [
     {
       icon: <RocketLaunchIcon />,
       title: "Founding Orbiter",
       desc: "Joined in the first cohort",
-      gradient: "linear-gradient(135deg, #ff7a59, #c2410c)",
+      gradient: "linear-gradient(135deg, #ff7a59, #726d6c)",
     },
     {
       icon: <BoltIcon />,
@@ -49,35 +58,20 @@ const Profile = () => {
     },
   ];
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await userProfile({ id: loginUserID }).unwrap();
-        console.log(response, "user profile response");
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-      }
-    };
-
-    fetchUserProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [open, setOpen] = React.useState<boolean>(false);
-
   const handleEditProfile = () => {
     setOpen(true);
   };
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      age: "",
-      bio: "",
-    },
+    firstName: profile?.firstName || "",
+    lastName: profile?.lastName || "",
+    email: profile?.email || "",
+    phoneNumber: profile?.phoneNumber || "",
+    age: profile?.age || "",
+    bio: profile?.bio || "",
+  },
     validationSchema: Yup.object({
       firstName: Yup.string().required("First name is required"),
       lastName: Yup.string().required("Last name is required"),
@@ -89,7 +83,18 @@ const Profile = () => {
         .optional(),
     }),
 
-    onSubmit: async (values) => {},
+    onSubmit: async (values) => {
+      try {
+        const response = await userProfileUpdate({
+          ...values,
+          age: values.age === "" ? undefined : Number(values.age),
+        }).unwrap();
+        toast.success(response?.message || "Profile updated successfully");
+        setOpen(false);
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Failed to update profile");
+      }
+    },
   });
 
   const handleEditProfileBody = () => {
@@ -154,7 +159,7 @@ const Profile = () => {
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
                   className="input-field"
-                  // disabled={true}
+                  disabled={true}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -173,7 +178,7 @@ const Profile = () => {
                     formik.touched.phoneNumber && formik.errors.phoneNumber
                   }
                   className="input-field"
-                  // disabled={true}
+                  disabled={true}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -216,10 +221,15 @@ const Profile = () => {
                   type="submit"
                   variant="contained"
                   style={{ marginRight: "10px" }}
+                  disabled={isUpdating}
                 >
-                  Save Changes
+                  {isUpdating ? "Saving..." : "Save Changes"}
                 </Button>
-                <Button variant="outlined" onClick={() => setOpen(false)}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(false)}
+                  disabled={isUpdating}
+                >
                   Cancel
                 </Button>
               </Grid>
@@ -243,25 +253,35 @@ const Profile = () => {
 
   return (
     <>
+    {(isFetchingProfile || isUpdating || isLoggingOut) && <Loader />}
       <Box className="profile">
         <Box className="profile_header">
           {/* <Box className="profile_header_cover" /> */}
 
           <Box className="profile_header_content">
             <Box className="profile_header_avatar">
-              VG
+              {`${profile.firstName?.[0] ?? ""}${
+                profile.lastName?.[0] ?? ""
+              }`.toUpperCase() || "?"}
               <span className="status"></span>
             </Box>
 
             <Box className="profile_header_body">
               <Box className="profile_header_left">
                 <Box className="profile_header_info">
-                  <Typography className="title">Venkatesh Group</Typography>
+                  <Typography className="title">
+                    {`${profile.firstName ?? ""} ${
+                      profile.lastName ?? ""
+                    }`.trim() || "—"}
+                  </Typography>
                   <Typography className="username">
-                    @venkatesh.orbiter
+                    {profile.email
+                      ? `@${profile.email.split("@")[0]}`
+                      : ""}
                   </Typography>
                   <Typography className="desc">
-                    Building tools that bring distant minds into the same orbit.
+                    {profile.bio ||
+                      "Building tools that bring distant minds into the same orbit."}
                   </Typography>
 
                   <Box className="chips">
@@ -332,10 +352,13 @@ const Profile = () => {
               <Typography className="about_title">ABOUT</Typography>
 
               {[
-                { label: "Email", value: "venkatesh@orbitalk.app" },
-                { label: "Phone", value: "+91 98765 43210" },
-                { label: "Timezone", value: "UTC +05:30 · IST" },
-                { label: "Pronouns", value: "he / him" },
+                { label: "Email", value: profile.email || "—" },
+                { label: "Phone", value: profile.phoneNumber || "—" },
+                {
+                  label: "Age",
+                  value: profile.age ? String(profile.age) : "—",
+                },
+                { label: "Bio", value: profile.bio || "—" },
               ].map((item) => (
                 <Box key={item.label} className="about_row">
                   <Typography className="label">{item.label}</Typography>
