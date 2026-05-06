@@ -35,7 +35,7 @@ export const userApi = api.injectEndpoints({
     // ✅ UPDATE PROFILE
     updateUserProfile: builder.mutation<UserResponse, Partial<UserData>>({
       query: (data) => ({
-        url: "users/profile",
+        url: "users/update",
         method: "PUT",
         body: data,
       }),

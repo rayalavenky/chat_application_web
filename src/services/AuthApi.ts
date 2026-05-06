@@ -3,7 +3,7 @@
 import { api } from "./api";
 
 export interface userData {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -28,7 +28,7 @@ interface LoginRequest {
   password: string;
 }
 interface SignUpData {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;

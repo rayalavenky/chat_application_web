@@ -19,10 +19,10 @@ import Loader from "../../components/Loader";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const loginUserID = useSelector((state: any) => state.user.userData?._id);
+  const loginUserID = useSelector((state: any) => state.user.userData?.id);
   const { data: userProfileResponse , isLoading: isFetchingProfile} = useGetUserByIdQuery(
     { id: loginUserID },
-    { skip: !loginUserID }
+    { skip: !loginUserID , refetchOnMountOrArgChange: true }
   );
   const [logoutUser , { isLoading: isLoggingOut }] = useLogoutMutation();
   const [userProfileUpdate, { isLoading: isUpdating }] =
