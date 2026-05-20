@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 const RegisterPage = () => {
   const [register, { isLoading }] = useRegisterMutation();
@@ -34,8 +35,10 @@ const RegisterPage = () => {
         .email("Invalid email format")
         .required("Email is required"),
 
-      phoneNumber: Yup.string()
-        .matches(/^[0-9]{10}$/, "Enter valid 10-digit phone number")
+      phoneNumber: Yup.number()
+        .typeError("Phone number must be a number")
+        .min(1000000000, "Enter valid 10-digit phone number")
+        .max(9999999999, "Enter valid 10-digit phone number")
         .required("Phone number is required"),
 
       age: Yup.number()
@@ -64,6 +67,7 @@ const RegisterPage = () => {
   return (
     <>
       <header className="topbar">
+        {isLoading && <Loader />}
         <div className="topbar__brand">
           <img src={Orbitalk} alt="Orbitalk" className="topbar_icon" />
           ORBITALK

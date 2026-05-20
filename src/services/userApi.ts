@@ -22,6 +22,15 @@ interface UserResponse {
 
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
+
+    getUsers: builder.query<any, void>({
+      query: () => ({
+        url: "users",
+        method: "GET",
+      }),
+      providesTags: ["UserProfile"],
+
+    }),
     
     // ✅ GET USER (use query, not mutation)
     getUserById: builder.query<UserResponse, { id: string }>({
@@ -46,6 +55,7 @@ export const userApi = api.injectEndpoints({
 });
 
 export const {
+  useGetUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserProfileMutation,
 } = userApi;
