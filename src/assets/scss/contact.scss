@@ -1,9 +1,10 @@
 .contact {
   min-height: 100vh;
   padding: 50px 250px;
-
   color: #fff;
   background: radial-gradient(circle at top left, #2a0a4a, #0b0b2d);
+
+  /* HEADER */
 
   &__header {
     display: flex;
@@ -27,7 +28,17 @@
       padding: 8px 20px;
       text-transform: none;
     }
+
+    .send-btn {
+      color: white;
+      svg {
+        font-size: 18px;
+        transform: rotate(-50deg);
+      }
+    }
   }
+
+  /* CONTROLS */
 
   &__controls {
     display: flex;
@@ -48,8 +59,8 @@
     }
 
     .MuiTabs-indicator {
-    display: none !important;
-  }
+      display: none !important;
+    }
 
     .MuiTabs-root {
       .MuiTab-root {
@@ -64,20 +75,37 @@
         background: linear-gradient(135deg, #7c4dff, #5e35b1);
         box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
         border-bottom: none !important;
-
       }
     }
   }
 
+  /* CONTACT GRID */
+
   &__grid {
     margin-top: 30px;
+
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+    gap: 22px;
+  }
+
+  /* REQUESTS */
+
+  &__requests {
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 22px;
   }
 }
 
-/* CARD */
+/* =========================================================
+   ORBIT CARD
+========================================================= */
+
 .orbit-card {
   background: #121212;
   border-radius: 16px;
@@ -95,6 +123,7 @@
     width: 60px;
     height: 60px;
     margin: auto;
+
     border-radius: 50%;
     background: linear-gradient(135deg, #7c4dff, #5e35b1);
     display: flex;
@@ -153,8 +182,223 @@
 
     button {
       text-transform: none;
-      border-radius: 20px;
+      border-radius: 999px;
     }
   }
 }
 
+/* =========================================================
+   REQUEST CARD
+========================================================= */
+
+.request-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+  border-radius: 26px;
+  background: rgba(14, 10, 35, 0.78);
+  border: 1px solid rgba(139, 92, 246, 0.14);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+  transition: all 0.35s ease;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.4),
+      0 0 24px rgba(124, 77, 255, 0.18);
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(
+      circle,
+      rgba(124, 77, 255, 0.2),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  &__avatar {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+  }
+
+  &__info {
+    h3 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    span {
+      display: block;
+      margin-top: 4px;
+      color: #a78bfa;
+      font-size: 14px;
+    }
+
+    p {
+      margin-top: 7px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 13px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    button {
+      text-transform: none;
+      border-radius: 999px;
+      padding: 10px 24px;
+      font-weight: 600;
+    }
+
+    .decline-btn {
+      color: white;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .accept-btn {
+      color: white;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+      &:hover {
+        background: linear-gradient(135deg, #9f67ff, #8b5cf6);
+      }
+    }
+  }
+}
+
+.request-text {
+  font-size: 14px;
+  color: $color-text-placeholder;
+  margin-bottom: 20px;
+}
+
+.search-btn-grid {
+  display: flex;
+  justify-content: flex-end;
+  background: linear-gradient(135deg, #7c4dff, #5e35b1);
+  color: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  text-transform: none !important;
+
+  .submit-btn {
+    color: white;
+  }
+}
+
+.search-users-list {
+  margin-top: 24px;
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-right: 4px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(124, 77, 255, 0.5);
+    border-radius: 10px;
+  }
+}
+
+.search-user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(18, 18, 35, 0.9);
+  border: 1px solid rgba(124, 77, 255, 0.14);
+  transition: 0.3s ease;
+
+  &:hover {
+    border-color: rgba(124, 77, 255, 0.35);
+    transform: translateY(-2px);
+  }
+}
+
+.search-user-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.search-user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  color: white;
+  font-size: 14px;
+}
+
+.search-user-info {
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    color: white;
+  }
+
+  span {
+    font-size: 13px;
+    color: #9f7aea;
+  }
+}
+
+.send-request-btn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  color: white !important;
+  border-radius: 999px !important;
+  text-transform: none !important;
+  padding: 8px 15px !important;
+  font-weight: 400 !important;
+  display: flex;
+  gap: 8px;
+
+  svg {
+    font-size: 15px;
+    transform: rotate(-25deg);
+  }
+}

@@ -22,7 +22,7 @@ export const api = createApi({
         }
     }),
      // Define tag types for cache invalidation
-    tagTypes : ['authApi', 'userApi', "UserProfile"],
+    tagTypes : ['authApi', 'userApi', "UserProfile", "Users", "userRequest"],
     // Endpoints will be injected from other files
     endpoints : ()=>({})
 });

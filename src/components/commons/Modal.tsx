@@ -46,7 +46,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               alignItems: "center",
               fontSize: "14px",
               letterSpacing: "1.5px",
-              color: "rgba(255,255,255,0.6)",
+              color: "rgba(255,255,255)",
             }}
           >
             {title}
