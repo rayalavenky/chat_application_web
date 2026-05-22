@@ -4,6 +4,7 @@ import Orbitcard from "./Orbitcard";
 
 const Contact = () => {
   const [tab, setTab] = useState<any>(0);
+  
   const users = [
   { initials: 'AV', name: 'Aria Vex', handle: '@aria.vex', mutual: 12, online: true },
   { initials: 'KS', name: 'Kai Stratos', handle: '@kai.stratos', mutual: 8, online: true },

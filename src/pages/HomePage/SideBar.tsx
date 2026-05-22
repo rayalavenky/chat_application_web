@@ -31,6 +31,10 @@ const SideBar:React.FC<SideBarProps> = ({ activeMenu, setActiveMenu }) => {
       name: "settings",
       icon: <SettingsOutlinedIcon className="icon" />,
     },
+    {
+      name: "users",
+      icon: <PeopleAltOutlinedIcon className="icon" />,
+    },
     
   ];
 

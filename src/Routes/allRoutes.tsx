@@ -10,6 +10,7 @@ const ResetPasswordPage = lazy(() => import('../pages/ForgotPassword/ResetPasswo
 const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
 const Contact = lazy(() => import('../pages/ContactsPage/Contact'));
 const ProfilePage = lazy(() => import('../pages/HomePage/Profile'));
+const Users = lazy(() => import('../pages/Users/Users'));
 
 
 const AllRoutes = () => {
@@ -25,6 +26,7 @@ const AllRoutes = () => {
           <Route path="chat" element={<ChatPage />} />
           <Route path="contacts" element={<Contact />} />
           <Route path='profile' element={<ProfilePage />} />
+          <Route path='users' element ={<Users />} />
         </Route>
       </Routes>
     </Suspense>
