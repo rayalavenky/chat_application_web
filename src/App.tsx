@@ -3,7 +3,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import AllRoutes from "./Routes/allRoutes";
 import StartField from "./components/StartField";
-import Orbitalk from "./assets/images/Icon.png";
 import { ToastContainer, Zoom } from "react-toastify";
 
 function App() {

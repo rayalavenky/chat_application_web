@@ -15,13 +15,13 @@ import CustomModal from "../../components/commons/Modal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import SearchIcon from "@mui/icons-material/Search";
-import { useLazyGetUserQuery } from "../../services/userApi";
+import { useLazyGetUsersQuery } from "../../services/userApi";
 
 const Contact = () => {
   const [tab, setTab] = useState<any>(0);
 
   const [getUser, { data: userProfileResponse, isLoading: isFetchingProfile }] =
-    useLazyGetUserQuery();
+    useLazyGetUsersQuery();
 
   console.log("User Profile Response:", userProfileResponse);
 

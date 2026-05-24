@@ -1,4 +1,6 @@
 import { api } from "./api";
+
+
 export interface UserData {
   id: string;
   firstName: string;
@@ -7,6 +9,21 @@ export interface UserData {
   phoneNumber: string;
   age: number;
   bio?: string;
+}
+export interface UsersData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  age: number;
+  bio?: string;
+}
+
+interface UsersResponse {
+  data: UsersData[];
+  message: string;
+  status: string;
 }
 
 interface UserResponse {
@@ -29,7 +46,7 @@ interface UserRequest {
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
-    getUser : builder.query<UserResponse, UserRequest>({
+    getUsers : builder.query<UsersResponse, UserRequest>({
       query: ({ search }) => ({
         url: `users`,
         params: search,
@@ -61,8 +78,8 @@ export const userApi = api.injectEndpoints({
 });
 
 export const {
-  useGetUserQuery,
-  useLazyGetUserQuery,
+  useGetUsersQuery,
+  useLazyGetUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserProfileMutation,
 } = userApi;
