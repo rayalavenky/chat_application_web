@@ -38,7 +38,14 @@ const UserTable = () => {
         </div>
       </div>
 
-      <table>
+      <table className="user-table__head-table">
+        <colgroup>
+          <col style={{ width: "26%" }} />
+          <col style={{ width: "26%" }} />
+          <col style={{ width: "16%" }} />
+          <col style={{ width: "18%" }} />
+          <col style={{ width: "14%" }} />
+        </colgroup>
         <thead>
           <tr>
             <th>User</th>
@@ -48,31 +55,42 @@ const UserTable = () => {
             <th>Status</th>
           </tr>
         </thead>
-
-        <tbody>
-          {usersData?.map((user:any, index: number) => (
-            <tr key={index}>
-              <td>
-                <div className="user-info">
-                  <div className="avatar">{user.firstName.charAt(0)}</div>
-                  <div>
-                    <p>{user.firstName} {user.lastName}</p>
-                    <span>{user.email}</span>
-                  </div>
-                </div>
-              </td>
-
-              <td>{user.email ? user.email : "-"}</td>
-              <td>{user.phoneNumber ? user.phoneNumber : "-"}</td>
-              <td>{user.bio ? user.bio : "-"}</td>
-
-              <td>
-                <span className={`status ${user.isOnline ? "active" : "pending"}`}>{user.isOnline ? "Online" : "Offline"}</span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
       </table>
+
+      <div className="table-scroll">
+        <table className="user-table__body-table">
+          <colgroup>
+            <col style={{ width: "26%" }} />
+            <col style={{ width: "26%" }} />
+            <col style={{ width: "16%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "14%" }} />
+          </colgroup>
+          <tbody>
+            {usersData?.map((user:any, index: number) => (
+              <tr key={index}>
+                <td>
+                  <div className="user-info">
+                    <div className="avatar">{user.firstName.charAt(0)}</div>
+                    <div>
+                      <p>{user.firstName} {user.lastName}</p>
+                      <span>{user.email}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>{user.email ? user.email : "-"}</td>
+                <td>{user.phoneNumber ? user.phoneNumber : "-"}</td>
+                <td>{user.bio ? user.bio : "-"}</td>
+
+                <td>
+                  <span className={`status ${user.isOnline ? "active" : "pending"}`}>{user.isOnline ? "Online" : "Offline"}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -16,14 +16,40 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLazyGetUsersQuery } from "../../services/userApi";
+import {
+  useGetReceivedRequestsQuery,
+  useGetSendRequestsQuery,
+  useSendConnectionRequestMutation,
+} from "../../services/userRequest";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Loader from "../../components/Loader";
 
 const Contact = () => {
+  const currentUser = useSelector((state: any) => state.user.userData);
+  console.log(currentUser, "currentUser");
+
   const [tab, setTab] = useState<any>(0);
-
+  const [open, setOpen] = useState<boolean>(false);
   const [getUser, { data: userProfileResponse, isLoading: isFetchingProfile }] =
-    useLazyGetUsersQuery();
+    useLazyGetUsersQuery({});
+  const [sendConnectionRequest] = useSendConnectionRequestMutation();
+  const {
+    data: requestResponseData,
+    isFetching: isFetchingReceived,
+  } = useGetReceivedRequestsQuery(
+    { userId: currentUser.id },
+    { skip: !currentUser.id || tab !== 3, refetchOnMountOrArgChange: true },
+  );
+  const {
+    data: sendRequestsResponseData,
+    isFetching: isFetchingSent,
+  } = useGetSendRequestsQuery(
+    { userId: currentUser.id },
+    { skip: !currentUser.id || tab !== 2, refetchOnMountOrArgChange: true },
+  );
 
-  console.log("User Profile Response:", userProfileResponse);
+  console.log(requestResponseData, "requestResponseData");
 
   const users = [
     {
@@ -105,60 +131,6 @@ const Contact = () => {
     },
   ];
 
-  const data = [
-    {
-      id: "69e31d20bad3bc44b07335b8",
-      firstName: "Sravanthi",
-      lastName: "Maturi",
-      phoneNumber: "9376666691",
-      email: "sravanthimaturi16@gmail.com",
-      age: 21,
-      bio: "hellos",
-      isOnline: true,
-      lastSeen: "2026-05-21T16:09:28.115Z",
-      createdAt: "2026-04-18T05:56:48.172Z",
-    },
-    {
-      id: "69e358c258d14afbd3447f90",
-      firstName: "asa",
-      lastName: "asa",
-      phoneNumber: "9376666670",
-      email: "sravanthimaturi26@gmail.com",
-      age: 20,
-      bio: "",
-      isOnline: false,
-      lastSeen: "2026-04-18T10:11:14.187Z",
-      createdAt: "2026-04-18T10:11:14.187Z",
-    },
-    {
-      id: "69e31d20bad3bc44b07335b8",
-      firstName: "Sravanthi",
-      lastName: "Maturi",
-      phoneNumber: "9376666691",
-      email: "sravanthimaturi16@gmail.com",
-      age: 21,
-      bio: "hellos",
-      isOnline: true,
-      lastSeen: "2026-05-21T16:09:28.115Z",
-      createdAt: "2026-04-18T05:56:48.172Z",
-    },
-    {
-      id: "69e31d20bad3bc44b07335b8",
-      firstName: "Sravanthi",
-      lastName: "Maturi",
-      phoneNumber: "9376666691",
-      email: "sravanthimaturi16@gmail.com",
-      age: 21,
-      bio: "hellos",
-      isOnline: true,
-      lastSeen: "2026-05-21T16:09:28.115Z",
-      createdAt: "2026-04-18T05:56:48.172Z",
-    },
-    
-  ];
-
-  const [open, setOpen] = useState<boolean>(false);
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -172,18 +144,28 @@ const Contact = () => {
     }),
 
     onSubmit: async (values) => {
+      const search = {
+        phoneNumber: values.phoneNumber,
+      };
+      const searchParam = JSON.stringify(search);
       await getUser({
-        search: {
-          phoneNumber: values.phoneNumber,
-        },
+        search: searchParam,
       });
     },
   });
 
-
-  const handleSendRequest = () => {
+  const handleSendRequest = async (toUserId: string) => {
     // Implement the logic to send a connection request to the user
     console.log("Send request clicked");
+    try {
+      const response = await sendConnectionRequest({
+        fromUserId: currentUser.id,
+        toUserId: toUserId,
+      }).unwrap();
+      toast.success(response?.message || "Request sent successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to send connection request");
+    }
   };
 
   const handleSendRequestBody = () => {
@@ -234,7 +216,7 @@ const Contact = () => {
           </div>
         </form>
         <div className="search-users-list">
-          {data.map((user) => {
+          {userProfileResponse?.data?.map((user) => {
             const initials =
               user.firstName.charAt(0).toUpperCase() +
               user.lastName.charAt(0).toUpperCase();
@@ -256,7 +238,10 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <Button className="send-request-btn" onClick={handleSendRequest}>
+                <Button
+                  className="send-request-btn"
+                  onClick={() => handleSendRequest(user.id)}
+                >
                   <SendOutlinedIcon />
                   Send Request
                 </Button>
@@ -297,7 +282,8 @@ const Contact = () => {
           >
             <Tab label="All" />
             <Tab label="Online" />
-            <Tab label="Requests" />
+            <Tab label="Requests Send" />
+            <Tab label="Requests Received" />
             <Tab label="Blocked" />
           </Tabs>
 
@@ -311,7 +297,7 @@ const Contact = () => {
           </div>
         </div>
         {/* NORMAL CONTACTS */}
-        {tab !== 2 && (
+        {tab !== 2 && tab !== 3 && (
           <div className="contact__grid">
             {users.map((user, i) => (
               <Orbitcard key={i} user={user} />
@@ -320,11 +306,39 @@ const Contact = () => {
         )}
 
         {/* REQUEST SCREEN */}
-        {tab === 2 && (
+        {(tab === 2 || tab === 3) && (
           <div className="contact__requests">
-            {requests.map((user, i) => (
-              <RequestCard key={i} user={user} />
-            ))}
+            {tab === 2 && (
+              <>
+                {isFetchingSent ? (
+                  <Loader />
+                ) : (sendRequestsResponseData?.data?.length ?? 0) > 0 ? (
+                  sendRequestsResponseData?.data?.map((user, i) => (
+                    <RequestCard key={i} userData={user} tab={tab} />
+                  ))
+                ) : (
+                  <div className="empty-request-state">
+                    No sent requests found
+                  </div>
+                )}
+              </>
+            )}
+
+            {tab === 3 && (
+              <>
+                {isFetchingReceived ? (
+                  <Loader />
+                ) : (requestResponseData?.data?.length ?? 0) > 0 ? (
+                  requestResponseData?.data?.map((user, i) => (
+                    <RequestCard key={i} userData={user} tab={tab} />
+                  ))
+                ) : (
+                  <div className="empty-request-state">
+                    No received requests found
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
       </Box>

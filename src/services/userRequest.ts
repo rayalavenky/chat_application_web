@@ -1,5 +1,26 @@
 import { api } from "./api";
 
+interface ReceivedRequestResponse {
+  data: {
+    toUserId: string;
+    status: string;
+    id: string;
+    fromUserId: string;
+    createdAt: string;
+    toUser: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string; 
+      bio: string;
+      isOnline: boolean;
+    };
+  }[];
+  message: string;
+  status: string;
+}
+
 export const userRequest = api.injectEndpoints({
   endpoints: (builder) => ({
     sendConnectionRequest: builder.mutation({
@@ -11,12 +32,18 @@ export const userRequest = api.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
 
-    getReceivedRequests: builder.mutation({
+    getReceivedRequests: builder.query<ReceivedRequestResponse,{userId: string;}>({
       query: ({ userId }) => ({
         url: `users/requests/received/${userId}`,
         method: "GET",
       }),
-      invalidatesTags: ["Users"],
+    }),
+
+    getSendRequests: builder.query<ReceivedRequestResponse,{userId: string;}>({
+      query: ({ userId }) => ({
+        url: `users/requests/sent/${userId}`,
+        method: "GET",
+      }),
     }),
 
     acceptConnectionRequest: builder.mutation({
@@ -38,7 +65,8 @@ export const userRequest = api.injectEndpoints({
 });
 export const {
   useSendConnectionRequestMutation,
-  useGetReceivedRequestsMutation,
+  useGetReceivedRequestsQuery,
+  useGetSendRequestsQuery,
   useAcceptConnectionRequestMutation,
   useGetUserContactsMutation,
 } = userRequest;

@@ -32,15 +32,8 @@ interface UserResponse {
   status: string;
 }
 
-interface UserSearch {
-  phoneNumber?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-}
-
 interface UserRequest {
-  search?: UserSearch;
+  search?: any;
 }
 
 export const userApi = api.injectEndpoints({
@@ -49,7 +42,7 @@ export const userApi = api.injectEndpoints({
     getUsers : builder.query<UsersResponse, UserRequest>({
       query: ({ search }) => ({
         url: `users`,
-        params: search,
+        params: { search },
         method: "GET",
       }),
       providesTags: ["Users"],

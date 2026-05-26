@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Orbitalk from "../../assets/images/Icon.png";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -7,41 +7,59 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useNavigate } from "react-router-dom";
 
-
 interface SideBarProps {
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
+  currentUser: any;
 }
-const SideBar:React.FC<SideBarProps> = ({ activeMenu, setActiveMenu }) => {
+const SideBar: React.FC<SideBarProps> = ({
+  activeMenu,
+  setActiveMenu,
+  currentUser,
+}) => {
   const navigate = useNavigate();
-  const menuItems = [
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const role = currentUser?.role || "";
+  const allMenus = [
     {
       name: "chat",
       icon: <ChatBubbleOutlineOutlinedIcon className="icon" />,
+      roles: ["USER"],
     },
     {
       name: "contacts",
       icon: <PeopleAltOutlinedIcon className="icon" />,
+      roles: ["USER"],
     },
     {
       name: "profile",
       icon: <PersonOutlinedIcon className="icon" />,
+      roles: ["USER"],
     },
     {
       name: "settings",
       icon: <SettingsOutlinedIcon className="icon" />,
+      roles: ["USER"],
     },
     {
       name: "users",
       icon: <PeopleAltOutlinedIcon className="icon" />,
+      roles: ["ADMIN"],
     },
-    
   ];
 
   const handleSelectMenu = (menu: string) => {
     setActiveMenu(menu);
     navigate(`/user/${menu}`);
   };
+
+  useEffect(() => {
+    const menuItems = allMenus.filter((menu) => menu.roles.includes(role));
+    setMenuItems(menuItems);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role]);
+
+  console.log(menuItems, "currentUser in sidebar");
   return (
     <Box className="sidebar">
       <div className="sidebar_header">

@@ -48,7 +48,12 @@ const LoginPage = () => {
             }),
           );
           formik.resetForm();
-          navigate("/user/chat");
+          const role = response?.data?.role;
+          if (role === "ADMIN") {
+            navigate("/user/users");
+          } else {
+            navigate("/user/chat");
+          }
         }
       } catch (err) {
         toast.error("Login failed");
