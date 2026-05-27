@@ -42,8 +42,18 @@ const SideBar: React.FC<SideBarProps> = ({
       roles: ["USER"],
     },
     {
+      name: "dashboard",
+      icon: <SettingsOutlinedIcon className="icon" />,
+      roles: ["ADMIN"],
+    },
+    {
       name: "users",
       icon: <PeopleAltOutlinedIcon className="icon" />,
+      roles: ["ADMIN"],
+    },
+    {
+      name: "profile",
+      icon: <PersonOutlinedIcon className="icon" />,
       roles: ["ADMIN"],
     },
   ];

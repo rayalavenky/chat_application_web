@@ -1,28 +1,18 @@
 import { Tab, Tabs } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useGetUsersQuery } from "../../services/userApi";
-import Loader from "../../components/Loader";
+import React, {  useState } from "react";
 
 
-const UserTable = () => {
+
+interface UserTableProps {
+  data?: any;
+}
+
+const UserTable: React.FC<UserTableProps> = ({ data }) => {
   const [tab, setTab] = useState<any>(0);
-  const [usersData, setUsersData] = useState<any>([]);
-  const { data: userProfileResponse , isLoading: isFetchingProfile} = useGetUsersQuery({});    
-  console.log(userProfileResponse,'------------------userProfileResponse');
-  
-  useEffect(() => {
-    if (userProfileResponse) {
-      setUsersData(tab === 1 ? userProfileResponse?.data?.filter((user:any)=> user?.isOnline) : userProfileResponse?.data);
-    }
-  }, [userProfileResponse, tab]);
-  
 
 
   return (
     <div className="user-table">
-      {isFetchingProfile && (
-        <Loader/>
-      )}
       <div className="table-header">
         <div className="tabs">
           <Tabs
@@ -67,14 +57,13 @@ const UserTable = () => {
             <col style={{ width: "14%" }} />
           </colgroup>
           <tbody>
-            {usersData?.map((user:any, index: number) => (
+            {data?.map((user:any, index: number) => (
               <tr key={index}>
                 <td>
                   <div className="user-info">
-                    <div className="avatar">{user.firstName.charAt(0)}</div>
+                    <div className="avatar">{user.firstName.charAt(0)}{user?.lastName?.charAt(0)}</div>
                     <div>
                       <p>{user.firstName} {user.lastName}</p>
-                      <span>{user.email}</span>
                     </div>
                   </div>
                 </td>

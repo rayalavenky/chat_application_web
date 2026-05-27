@@ -26,7 +26,9 @@ const AllRoutes = () => {
           <Route path="chat" element={<ChatPage />} />
           <Route path="contacts" element={<Contact />} />
           <Route path='profile' element={<ProfilePage />} />
+          <Route path='dashboard' element={<ProfilePage />} />
           <Route path='users' element ={<Users />} />
+          <Route path="admin-profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </Suspense>
