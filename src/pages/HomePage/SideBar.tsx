@@ -32,11 +32,6 @@ const SideBar: React.FC<SideBarProps> = ({
       roles: ["ADMIN"],
     },
     {
-      name: "profile",
-      icon: <PersonOutlinedIcon className="icon" />,
-      roles: ["ADMIN"],
-    },
-    {
       name: "chat",
       icon: <ChatBubbleOutlineOutlinedIcon className="icon" />,
       roles: ["ADMIN","USER"],
