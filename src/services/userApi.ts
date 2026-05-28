@@ -18,6 +18,9 @@ export interface UsersData {
   phoneNumber: string;
   age: number;
   bio?: string;
+  isRequestSent?: boolean;
+  isRequestReceived?: boolean;
+  incomingRequestId?: string;
 }
 
 interface UsersResponse {

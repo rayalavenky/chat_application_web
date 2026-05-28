@@ -22,26 +22,6 @@ const SideBar: React.FC<SideBarProps> = ({
   const role = currentUser?.role || "";
   const allMenus = [
     {
-      name: "chat",
-      icon: <ChatBubbleOutlineOutlinedIcon className="icon" />,
-      roles: ["USER"],
-    },
-    {
-      name: "contacts",
-      icon: <PeopleAltOutlinedIcon className="icon" />,
-      roles: ["USER"],
-    },
-    {
-      name: "profile",
-      icon: <PersonOutlinedIcon className="icon" />,
-      roles: ["USER"],
-    },
-    {
-      name: "settings",
-      icon: <SettingsOutlinedIcon className="icon" />,
-      roles: ["USER"],
-    },
-    {
       name: "dashboard",
       icon: <SettingsOutlinedIcon className="icon" />,
       roles: ["ADMIN"],
@@ -55,6 +35,26 @@ const SideBar: React.FC<SideBarProps> = ({
       name: "profile",
       icon: <PersonOutlinedIcon className="icon" />,
       roles: ["ADMIN"],
+    },
+    {
+      name: "chat",
+      icon: <ChatBubbleOutlineOutlinedIcon className="icon" />,
+      roles: ["ADMIN","USER"],
+    },
+    {
+      name: "contacts",
+      icon: <PeopleAltOutlinedIcon className="icon" />,
+      roles: ["ADMIN","USER"],
+    },
+    {
+      name: "profile",
+      icon: <PersonOutlinedIcon className="icon" />,
+      roles: ["ADMIN","USER"],
+    },
+    {
+      name: "settings",
+      icon: <SettingsOutlinedIcon className="icon" />,
+      roles: ["ADMIN","USER"],
     },
   ];
 

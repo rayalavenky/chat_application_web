@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLazyGetUsersQuery } from "../../services/userApi";
 import {
+  useAcceptConnectionRequestMutation,
   useGetReceivedRequestsQuery,
   useGetSendRequestsQuery,
   useSendConnectionRequestMutation,
@@ -31,25 +32,22 @@ const Contact = () => {
 
   const [tab, setTab] = useState<any>(0);
   const [open, setOpen] = useState<boolean>(false);
+  const [searchedUsers, setSearchedUsers] = useState<any[]>([]);
   const [getUser, { data: userProfileResponse, isLoading: isFetchingProfile }] =
     useLazyGetUsersQuery({});
   const [sendConnectionRequest] = useSendConnectionRequestMutation();
-  const {
-    data: requestResponseData,
-    isFetching: isFetchingReceived,
-  } = useGetReceivedRequestsQuery(
-    { userId: currentUser.id },
-    { skip: !currentUser.id || tab !== 3, refetchOnMountOrArgChange: true },
-  );
-  const {
-    data: sendRequestsResponseData,
-    isFetching: isFetchingSent,
-  } = useGetSendRequestsQuery(
-    { userId: currentUser.id },
-    { skip: !currentUser.id || tab !== 2, refetchOnMountOrArgChange: true },
-  );
-
-  console.log(requestResponseData, "requestResponseData");
+  const [acceptConnectionRequest, { isLoading: isAccepting }] =
+    useAcceptConnectionRequestMutation();
+  const { data: requestResponseData, isFetching: isFetchingReceived } =
+    useGetReceivedRequestsQuery(
+      { userId: currentUser.id },
+      { skip: !currentUser.id || tab !== 3, refetchOnMountOrArgChange: true },
+    );
+  const { data: sendRequestsResponseData, isFetching: isFetchingSent } =
+    useGetSendRequestsQuery(
+      { userId: currentUser.id },
+      { skip: !currentUser.id || tab !== 2, refetchOnMountOrArgChange: true },
+    );
 
   const users = [
     {
@@ -148,9 +146,11 @@ const Contact = () => {
         phoneNumber: values.phoneNumber,
       };
       const searchParam = JSON.stringify(search);
-      await getUser({
+      const response = await getUser({
         search: searchParam,
-      });
+      }).unwrap();
+
+      setSearchedUsers(response?.data || []);
     },
   });
 
@@ -165,6 +165,15 @@ const Contact = () => {
       toast.success(response?.message || "Request sent successfully");
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to send connection request");
+    }
+  };
+
+  const handleAcceptRequest = async (requestId: string) => {
+    try {
+      const response = await acceptConnectionRequest({ requestId }).unwrap();
+      toast.success(response?.message || "Request accepted successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to accept request");
     }
   };
 
@@ -216,7 +225,7 @@ const Contact = () => {
           </div>
         </form>
         <div className="search-users-list">
-          {userProfileResponse?.data?.map((user) => {
+          {searchedUsers.map((user) => {
             const initials =
               user.firstName.charAt(0).toUpperCase() +
               user.lastName.charAt(0).toUpperCase();
@@ -239,11 +248,22 @@ const Contact = () => {
                 </div>
 
                 <Button
+                  disabled={user.isRequestSent || isAccepting}
                   className="send-request-btn"
-                  onClick={() => handleSendRequest(user.id)}
+                  onClick={() => {
+                    if (user.isRequestReceived && user.incomingRequestId) {
+                      handleAcceptRequest(user.incomingRequestId);
+                    } else {
+                      handleSendRequest(user.id);
+                    }
+                  }}
                 >
                   <SendOutlinedIcon />
-                  Send Request
+                  {user.isRequestSent
+                    ? "Request Sent"
+                    : user.isRequestReceived
+                      ? "Accept Request"
+                      : "Send Request"}
                 </Button>
               </div>
             );
@@ -253,8 +273,15 @@ const Contact = () => {
     );
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    formik.resetForm();
+    setSearchedUsers([]);
+  };
+
   return (
     <>
+      {isAccepting && <Loader />}
       <Box className="contact">
         <div className="contact__header">
           <div>
@@ -313,9 +340,15 @@ const Contact = () => {
                 {isFetchingSent ? (
                   <Loader />
                 ) : (sendRequestsResponseData?.data?.length ?? 0) > 0 ? (
-                  sendRequestsResponseData?.data?.map((user, i) => (
-                    <RequestCard key={i} userData={user} tab={tab} />
-                  ))
+                  // <Grid container spacing={2}>
+                  <>
+                    {sendRequestsResponseData?.data?.map((user, i) => (
+                      // <Grid  size={{ xs: 12, sm: 6, md: 3 }} key={i}>
+                      <RequestCard userData={user} tab={tab} />
+                      // </Grid>
+                    ))}
+                    </>
+                  // </Grid>
                 ) : (
                   <div className="empty-request-state">
                     No sent requests found
@@ -330,7 +363,13 @@ const Contact = () => {
                   <Loader />
                 ) : (requestResponseData?.data?.length ?? 0) > 0 ? (
                   requestResponseData?.data?.map((user, i) => (
-                    <RequestCard key={i} userData={user} tab={tab} />
+                    <RequestCard
+                      key={i}
+                      userData={user}
+                      tab={tab}
+                      onAccept={handleAcceptRequest}
+                      isAccepting={isAccepting}
+                    />
                   ))
                 ) : (
                   <div className="empty-request-state">
@@ -345,7 +384,7 @@ const Contact = () => {
       {open && (
         <CustomModal
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => handleClose()}
           title="Send a Request"
           handleModalBody={() => handleSendRequestBody()}
           width={"500px"}

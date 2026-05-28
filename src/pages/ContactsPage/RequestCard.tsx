@@ -1,10 +1,12 @@
-import React from "react";
 import { Button } from "@mui/material";
 
-const RequestCard = ({ userData, tab }: any) => {
+const RequestCard = ({ userData, tab, onAccept, isAccepting }: any) => {
+  const user = tab === 2 ? userData?.toUser : userData?.fromUser;
 
-  const user = userData?.toUser ; // Adjust based on the actual data structure
-  console.log(userData ,user,'------------------user in request card');
+  const handleDeclineRequest = (id: string) => {
+    // Implement decline request logic here
+    console.log("Declined request for user ID:", id);
+  };
   return (
     <div className="request-card">
       <div className="request-card__left">
@@ -18,7 +20,6 @@ const RequestCard = ({ userData, tab }: any) => {
             {user?.firstName} {user?.lastName}
           </h3>
           <span>{user?.email}</span>
-          <p>{user?.mutual} mutual orbiters</p>
         </div>
       </div>
 
@@ -29,9 +30,32 @@ const RequestCard = ({ userData, tab }: any) => {
           </div>
         ) : (
           <>
-            {" "}
-            <Button className="decline-btn">Decline</Button>
-            <Button className="accept-btn">Accept</Button>
+            {tab === 3 &&
+              (userData?.status.toLowerCase() === "pending" ? (
+                <>
+                  <Button
+                    className="decline-btn"
+                    onClick={() => handleDeclineRequest(userData.requestId)}
+                    disabled={isAccepting}
+                  >
+                    Decline
+                  </Button>
+
+                  <Button
+                    className="accept-btn"
+                    onClick={() => onAccept?.(userData.requestId)}
+                    disabled={isAccepting}
+                  >
+                    {isAccepting ? "Accepting..." : "Accept"}
+                  </Button>
+                </>
+              ) : (
+                <div
+                  className={`request-status ${userData?.status?.toLowerCase()}`}
+                >
+                  {userData?.status}
+                </div>
+              ))}
           </>
         )}
       </div>

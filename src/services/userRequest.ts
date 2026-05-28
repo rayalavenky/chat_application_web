@@ -2,9 +2,9 @@ import { api } from "./api";
 
 interface ReceivedRequestResponse {
   data: {
+    requestId: string;
     toUserId: string;
     status: string;
-    id: string;
     fromUserId: string;
     createdAt: string;
     toUser: {
@@ -12,7 +12,7 @@ interface ReceivedRequestResponse {
       firstName: string;
       lastName: string;
       email: string;
-      phoneNumber: string; 
+      phoneNumber: string;
       bio: string;
       isOnline: boolean;
     };
@@ -37,6 +37,7 @@ export const userRequest = api.injectEndpoints({
         url: `users/requests/received/${userId}`,
         method: "GET",
       }),
+      providesTags: ["ReceivedRequest"],
     }),
 
     getSendRequests: builder.query<ReceivedRequestResponse,{userId: string;}>({
@@ -49,9 +50,9 @@ export const userRequest = api.injectEndpoints({
     acceptConnectionRequest: builder.mutation({
       query: ({ requestId }) => ({
         url: `users/requests/accept/${requestId}`,
-        method: "POST",
+        method: "PUT",
       }),
-      invalidatesTags: ["Users"],
+      invalidatesTags: ["ReceivedRequest"],
     }),
 
     getUserContacts: builder.mutation({
