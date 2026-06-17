@@ -20,7 +20,10 @@ import {
   useAcceptConnectionRequestMutation,
   useGetReceivedRequestsQuery,
   useGetSendRequestsQuery,
+  useGetUserContactsQuery,
+  useRejectConnectionRequestMutation,
   useSendConnectionRequestMutation,
+  useGetOnlineContactsQuery,
 } from "../../services/userRequest";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -28,8 +31,6 @@ import Loader from "../../components/Loader";
 
 const Contact = () => {
   const currentUser = useSelector((state: any) => state.user.userData);
-  console.log(currentUser, "currentUser");
-
   const [tab, setTab] = useState<any>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [searchedUsers, setSearchedUsers] = useState<any[]>([]);
@@ -38,6 +39,21 @@ const Contact = () => {
   const [sendConnectionRequest] = useSendConnectionRequestMutation();
   const [acceptConnectionRequest, { isLoading: isAccepting }] =
     useAcceptConnectionRequestMutation();
+  const [rejectConnectionRequest, { isLoading: isRejecting }] =
+    useRejectConnectionRequestMutation();
+  const { data: contactsResponseData, isFetching: isFetchingContacts } =
+    useGetUserContactsQuery(
+      { userId: currentUser.id },
+      {
+        skip: !currentUser.id || (tab !== 0 && tab !== 1),
+        refetchOnMountOrArgChange: true,
+      },
+    );
+  const { data: onlineContactsResponseData, isFetching: isFetchingOnlineContacts } =
+    useGetOnlineContactsQuery(
+      { userId: currentUser.id },
+      { skip: !currentUser.id || tab !== 1, refetchOnMountOrArgChange: true },
+    );
   const { data: requestResponseData, isFetching: isFetchingReceived } =
     useGetReceivedRequestsQuery(
       { userId: currentUser.id },
@@ -49,85 +65,9 @@ const Contact = () => {
       { skip: !currentUser.id || tab !== 2, refetchOnMountOrArgChange: true },
     );
 
-  const users = [
-    {
-      initials: "AV",
-      name: "Aria Vex",
-      handle: "@aria.vex",
-      mutual: 12,
-      online: true,
-    },
-    {
-      initials: "KS",
-      name: "Kai Stratos",
-      handle: "@kai.stratos",
-      mutual: 8,
-      online: true,
-    },
-    {
-      initials: "NL",
-      name: "Nova Lin",
-      handle: "@nova.lin",
-      mutual: 24,
-      online: false,
-    },
-    {
-      initials: "OM",
-      name: "Orin Mist",
-      handle: "@orin.mist",
-      mutual: 3,
-      online: false,
-    },
-    {
-      initials: "LS",
-      name: "Lyra Solace",
-      handle: "@lyra.solace",
-      mutual: 17,
-      online: true,
-    },
-    {
-      initials: "ZH",
-      name: "Zephyr Halo",
-      handle: "@zephyr.halo",
-      mutual: 5,
-      online: false,
-    },
-    {
-      initials: "MV",
-      name: "Mira Vale",
-      handle: "@mira.vale",
-      mutual: 9,
-      online: true,
-    },
-    {
-      initials: "TQ",
-      name: "Theo Quark",
-      handle: "@theo.quark",
-      mutual: 14,
-      online: false,
-    },
-  ];
-
-  const requests = [
-    {
-      initials: "SA",
-      name: "Solene Ash",
-      handle: "@solene.ash",
-      mutual: 4,
-    },
-    {
-      initials: "RC",
-      name: "Ren Comet",
-      handle: "@ren.comet",
-      mutual: 1,
-    },
-    {
-      initials: "NV",
-      name: "Nova Vale",
-      handle: "@nova.vale",
-      mutual: 7,
-    },
-  ];
+  const allContacts = contactsResponseData?.data ?? [];
+  const onlineContacts = onlineContactsResponseData?.data ?? [];
+  const contacts = tab === 1 ? onlineContacts : allContacts;
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -174,6 +114,15 @@ const Contact = () => {
       toast.success(response?.message || "Request accepted successfully");
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to accept request");
+    }
+  };
+
+  const handleRejectRequest = async (requestId: string) => {
+    try {
+      const response = await rejectConnectionRequest({ requestId }).unwrap();
+      toast.success(response?.message || "Request rejected successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to reject request");
     }
   };
 
@@ -281,12 +230,12 @@ const Contact = () => {
 
   return (
     <>
-      {isAccepting && <Loader />}
+      {(isAccepting || isRejecting) && <Loader />}
       <Box className="contact">
         <div className="contact__header">
           <div>
             <h1>Contacts</h1>
-            <p>People you orbit with — 8 connections.</p>
+            <p>People you orbit with — {allContacts.length} connections.</p>
           </div>
           <Button
             className="add-btn"
@@ -325,11 +274,19 @@ const Contact = () => {
         </div>
         {/* NORMAL CONTACTS */}
         {tab !== 2 && tab !== 3 && (
-          <div className="contact__grid">
-            {users.map((user, i) => (
-              <Orbitcard key={i} user={user} />
-            ))}
-          </div>
+          <>
+            {isFetchingContacts || isFetchingOnlineContacts ? (
+              <Loader />
+            ) : contacts.length > 0 ? (
+              <div className="contact__grid">
+                {contacts.map((contact) => (
+                  <Orbitcard key={contact.id} user={contact} />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-request-state">No contacts found</div>
+            )}
+          </>
         )}
 
         {/* REQUEST SCREEN */}
@@ -368,7 +325,9 @@ const Contact = () => {
                       userData={user}
                       tab={tab}
                       onAccept={handleAcceptRequest}
+                      onReject={handleRejectRequest}
                       isAccepting={isAccepting}
+                      isRejecting={isRejecting}
                     />
                   ))
                 ) : (

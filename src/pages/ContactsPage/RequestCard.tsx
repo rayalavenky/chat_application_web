@@ -1,12 +1,15 @@
 import { Button } from "@mui/material";
 
-const RequestCard = ({ userData, tab, onAccept, isAccepting }: any) => {
+const RequestCard = ({
+  userData,
+  tab,
+  onAccept,
+  onReject,
+  isAccepting,
+  isRejecting,
+}: any) => {
   const user = tab === 2 ? userData?.toUser : userData?.fromUser;
 
-  const handleDeclineRequest = (id: string) => {
-    // Implement decline request logic here
-    console.log("Declined request for user ID:", id);
-  };
   return (
     <div className="request-card">
       <div className="request-card__left">
@@ -35,16 +38,16 @@ const RequestCard = ({ userData, tab, onAccept, isAccepting }: any) => {
                 <>
                   <Button
                     className="decline-btn"
-                    onClick={() => handleDeclineRequest(userData.requestId)}
-                    disabled={isAccepting}
+                    onClick={() => onReject?.(userData.requestId)}
+                    disabled={isAccepting || isRejecting}
                   >
-                    Decline
+                    {isRejecting ? "Declining..." : "Decline"}
                   </Button>
 
                   <Button
                     className="accept-btn"
                     onClick={() => onAccept?.(userData.requestId)}
-                    disabled={isAccepting}
+                    disabled={isAccepting || isRejecting}
                   >
                     {isAccepting ? "Accepting..." : "Accept"}
                   </Button>
