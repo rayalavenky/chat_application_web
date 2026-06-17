@@ -1,5 +1,21 @@
 import { api } from "./api";
 
+interface ContactsResponse {
+  data: {
+    id: string;
+    userId: string;
+    contactUserId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    isOnline: boolean;
+    createdAt: string;
+  }[];
+  message: string;
+  status: string;
+}
+
 interface ReceivedRequestResponse {
   data: {
     requestId: string;
@@ -55,12 +71,27 @@ export const userRequest = api.injectEndpoints({
       invalidatesTags: ["ReceivedRequest"],
     }),
 
-    getUserContacts: builder.mutation({
+    getUserContacts: builder.query<ContactsResponse, { userId: string }>({
       query: ({ userId }) => ({
-        url: `users/${userId}/contacts`,
+        url: `users/contacts/${userId}`,
         method: "GET",
       }),
-      invalidatesTags: ["Users"],
+      // providesTags: ["Users"],
+    }),
+
+    rejectConnectionRequest: builder.mutation({
+      query: ({ requestId }) => ({
+        url: `users/requests/reject/${requestId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ReceivedRequest"],
+    }),
+
+    getOnlineContacts: builder.query<ContactsResponse, { userId: string }>({
+      query: ({ userId }) => ({
+        url: `users/contacts/${userId}/online`,
+        method: "GET",
+      }),
     }),
   }),
 });
@@ -69,5 +100,7 @@ export const {
   useGetReceivedRequestsQuery,
   useGetSendRequestsQuery,
   useAcceptConnectionRequestMutation,
-  useGetUserContactsMutation,
+  useGetUserContactsQuery,
+  useRejectConnectionRequestMutation,
+  useGetOnlineContactsQuery,
 } = userRequest;
