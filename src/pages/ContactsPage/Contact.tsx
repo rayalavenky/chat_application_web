@@ -7,7 +7,7 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Orbitcard from "./Orbitcard";
 import RequestCard from "./RequestCard";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
@@ -28,6 +28,7 @@ import {
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
+import { getSocket } from "../../services/socket";
 
 const Contact = () => {
   const currentUser = useSelector((state: any) => state.user.userData);
@@ -49,11 +50,13 @@ const Contact = () => {
         refetchOnMountOrArgChange: true,
       },
     );
-  const { data: onlineContactsResponseData, isFetching: isFetchingOnlineContacts } =
-    useGetOnlineContactsQuery(
-      { userId: currentUser.id },
-      { skip: !currentUser.id || tab !== 1, refetchOnMountOrArgChange: true },
-    );
+  const {
+    data: onlineContactsResponseData,
+    isFetching: isFetchingOnlineContacts,
+  } = useGetOnlineContactsQuery(
+    { userId: currentUser.id },
+    { skip: !currentUser.id || tab !== 1, refetchOnMountOrArgChange: true },
+  );
   const { data: requestResponseData, isFetching: isFetchingReceived } =
     useGetReceivedRequestsQuery(
       { userId: currentUser.id },
@@ -228,6 +231,36 @@ const Contact = () => {
     setSearchedUsers([]);
   };
 
+ useEffect(() => {
+
+  const socket = getSocket();
+
+  if (!socket) return;
+
+  socket.onmessage = (event) => {
+
+    const data = JSON.parse(event.data);
+
+    switch (data.type) {
+
+      case "new_request":
+        toast.success("New Request Received");
+        break;
+
+      case "request_accepted":
+        toast.success("Request Accepted");
+        break;
+
+      case "request_rejected":
+        toast.error("Request Rejected");
+        break;
+
+      default:
+        break;
+    }
+  };
+
+}, []);
   return (
     <>
       {(isAccepting || isRejecting) && <Loader />}
@@ -304,9 +337,9 @@ const Contact = () => {
                       <RequestCard userData={user} tab={tab} />
                       // </Grid>
                     ))}
-                    </>
-                  // </Grid>
+                  </>
                 ) : (
+                  // </Grid>
                   <div className="empty-request-state">
                     No sent requests found
                   </div>

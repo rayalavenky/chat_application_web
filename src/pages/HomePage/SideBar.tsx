@@ -64,7 +64,6 @@ const SideBar: React.FC<SideBarProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
-  console.log(menuItems, "currentUser in sidebar");
   return (
     <Box className="sidebar">
       <div className="sidebar_header">

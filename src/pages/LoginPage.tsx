@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import Loader from "../components/Loader";
+import { connectSocket } from "../services/socket";
 
 const LoginPage = () => {
   const [login, { isLoading }] = useLoginMutation();
@@ -38,8 +39,8 @@ const LoginPage = () => {
       console.log(values);
       try {
         const response = await login(values).unwrap();
+        console.log(response,'-------------------------response')
         if (response?.status === "success") {
-          toast.success(response?.message);
           dispatch(
             setUser({
               userData: response?.data,
@@ -47,6 +48,9 @@ const LoginPage = () => {
               refreshToken: response?.data?.refreshToken,
             }),
           );
+          connectSocket(response?.data?.id);
+          toast.success(response?.message);
+
           formik.resetForm();
           const role = response?.data?.role;
           if (role === "ADMIN") {
