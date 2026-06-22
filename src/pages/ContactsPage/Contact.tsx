@@ -50,15 +50,17 @@ const Contact = () => {
     useGetUserContactsQuery(
       { userId: currentUser.id, page: contactsPage, limit: CONTACTS_PAGE_SIZE },
       {
-        skip: !currentUser.id || (tab !== 0),
+        skip: !currentUser.id || tab !== 0,
         refetchOnMountOrArgChange: true,
       },
     );
-  const { data: onlineContactsResponseData, isFetching: isFetchingOnlineContacts } =
-    useGetOnlineContactsQuery(
-      { userId: currentUser.id, page: contactsPage, limit: CONTACTS_PAGE_SIZE },
-      { skip: !currentUser.id || tab !== 1, refetchOnMountOrArgChange: true },
-    );
+  const {
+    data: onlineContactsResponseData,
+    isFetching: isFetchingOnlineContacts,
+  } = useGetOnlineContactsQuery(
+    { userId: currentUser.id, page: contactsPage, limit: CONTACTS_PAGE_SIZE },
+    { skip: !currentUser.id || tab !== 1, refetchOnMountOrArgChange: true },
+  );
   const { data: requestResponseData, isFetching: isFetchingReceived } =
     useGetReceivedRequestsQuery(
       { userId: currentUser.id, page: requestsPage, limit: CONTACTS_PAGE_SIZE },
@@ -126,6 +128,11 @@ const Contact = () => {
         fromUserId: currentUser.id,
         toUserId: toUserId,
       }).unwrap();
+      setSearchedUsers((prev) =>
+        prev.map((user) =>
+          user.id === toUserId ? { ...user, isRequestSent: true } : user,
+        ),
+      );
       toast.success(response?.message || "Request sent successfully");
     } catch (error: any) {
       toast.error(error?.data?.message || "Failed to send connection request");
@@ -338,12 +345,9 @@ const Contact = () => {
                 {isFetchingSent ? (
                   <Loader />
                 ) : (sendRequestsResponseData?.data?.length ?? 0) > 0 ? (
-                  // <Grid container spacing={2}>
                   <>
                     {sendRequestsResponseData?.data?.map((user, i) => (
-                      // <Grid  size={{ xs: 12, sm: 6, md: 3 }} key={i}>
                       <RequestCard key={i} userData={user} tab={tab} />
-                      // </Grid>
                     ))}
                     {sentRequestsPageCount > 1 && (
                       <div className="contact__pagination">
@@ -356,8 +360,7 @@ const Contact = () => {
                         />
                       </div>
                     )}
-                    </>
-                  // </Grid>
+                  </>
                 ) : (
                   <div className="empty-request-state">
                     No sent requests found
