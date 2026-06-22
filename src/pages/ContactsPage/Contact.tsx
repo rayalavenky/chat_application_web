@@ -28,7 +28,7 @@ import {
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
-import { getSocket } from "../../services/socket";
+import { onSocketMessage } from "../../services/socket";
 
 const Contact = () => {
   const currentUser = useSelector((state: any) => state.user.userData);
@@ -233,13 +233,7 @@ const Contact = () => {
 
  useEffect(() => {
 
-  const socket = getSocket();
-
-  if (!socket) return;
-
-  socket.onmessage = (event) => {
-
-    const data = JSON.parse(event.data);
+  const unsubscribe = onSocketMessage((data) => {
 
     switch (data.type) {
 
@@ -258,7 +252,9 @@ const Contact = () => {
       default:
         break;
     }
-  };
+  });
+
+  return unsubscribe;
 
 }, []);
   return (

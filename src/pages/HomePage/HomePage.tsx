@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import SideBar from "./SideBar";
 import { Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { connectSocket } from "../../services/socket";
 
 const HomePage = () => {
   const location = useLocation();
@@ -13,6 +14,15 @@ const HomePage = () => {
     const path = location.pathname.split("/");
     setActiveMenu(path[path.length - 1]);
   }, [location]);
+
+  // Restore the WebSocket on every load of the authenticated layout.
+  // The session is persisted (redux-persist) but the socket lives only in
+  // module memory, so without this it never reconnects after a page refresh.
+  useEffect(() => {
+    if (currentUser?.id) {
+      connectSocket(currentUser.id);
+    }
+  }, [currentUser?.id]);
 
   return (
     <div className="home">
