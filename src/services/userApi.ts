@@ -27,6 +27,7 @@ interface UsersResponse {
   data: UsersData[];
   message: string;
   status: string;
+  totalRecords: number;
 }
 
 interface UserResponse {
@@ -37,15 +38,17 @@ interface UserResponse {
 
 interface UserRequest {
   search?: any;
+  page?: number;
+  limit?: number;
 }
 
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
 
     getUsers : builder.query<UsersResponse, UserRequest>({
-      query: ({ search }) => ({
+      query: ({ search, page = 1, limit = 10 }) => ({
         url: `users`,
-        params: { search },
+        params: { search, page, limit },
         method: "GET",
       }),
       providesTags: ["Users"],

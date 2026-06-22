@@ -3,6 +3,7 @@ import {
   Button,
   Grid,
   IconButton,
+  Pagination,
   Tab,
   Tabs,
   TextField,
@@ -29,9 +30,13 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 
+const CONTACTS_PAGE_SIZE = 10;
+
 const Contact = () => {
   const currentUser = useSelector((state: any) => state.user.userData);
   const [tab, setTab] = useState<any>(0);
+  const [contactsPage, setContactsPage] = useState(1);
+  const [requestsPage, setRequestsPage] = useState(1);
   const [open, setOpen] = useState<boolean>(false);
   const [searchedUsers, setSearchedUsers] = useState<any[]>([]);
   const [getUser, { data: userProfileResponse, isLoading: isFetchingProfile }] =
@@ -43,31 +48,50 @@ const Contact = () => {
     useRejectConnectionRequestMutation();
   const { data: contactsResponseData, isFetching: isFetchingContacts } =
     useGetUserContactsQuery(
-      { userId: currentUser.id },
+      { userId: currentUser.id, page: contactsPage, limit: CONTACTS_PAGE_SIZE },
       {
-        skip: !currentUser.id || (tab !== 0 && tab !== 1),
+        skip: !currentUser.id || (tab !== 0),
         refetchOnMountOrArgChange: true,
       },
     );
   const { data: onlineContactsResponseData, isFetching: isFetchingOnlineContacts } =
     useGetOnlineContactsQuery(
-      { userId: currentUser.id },
+      { userId: currentUser.id, page: contactsPage, limit: CONTACTS_PAGE_SIZE },
       { skip: !currentUser.id || tab !== 1, refetchOnMountOrArgChange: true },
     );
   const { data: requestResponseData, isFetching: isFetchingReceived } =
     useGetReceivedRequestsQuery(
-      { userId: currentUser.id },
+      { userId: currentUser.id, page: requestsPage, limit: CONTACTS_PAGE_SIZE },
       { skip: !currentUser.id || tab !== 3, refetchOnMountOrArgChange: true },
     );
   const { data: sendRequestsResponseData, isFetching: isFetchingSent } =
     useGetSendRequestsQuery(
-      { userId: currentUser.id },
+      { userId: currentUser.id, page: requestsPage, limit: CONTACTS_PAGE_SIZE },
       { skip: !currentUser.id || tab !== 2, refetchOnMountOrArgChange: true },
     );
 
   const allContacts = contactsResponseData?.data ?? [];
   const onlineContacts = onlineContactsResponseData?.data ?? [];
   const contacts = tab === 1 ? onlineContacts : allContacts;
+
+  const totalContacts =
+    (tab === 1
+      ? onlineContactsResponseData?.totalRecords
+      : contactsResponseData?.totalRecords) ?? 0;
+  const contactsPageCount = Math.ceil(totalContacts / CONTACTS_PAGE_SIZE);
+
+  const sentRequestsPageCount = Math.ceil(
+    (sendRequestsResponseData?.totalRecords ?? 0) / CONTACTS_PAGE_SIZE,
+  );
+  const receivedRequestsPageCount = Math.ceil(
+    (requestResponseData?.totalRecords ?? 0) / CONTACTS_PAGE_SIZE,
+  );
+
+  const handleTabChange = (value: number) => {
+    setTab(value);
+    setContactsPage(1);
+    setRequestsPage(1);
+  };
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -235,7 +259,11 @@ const Contact = () => {
         <div className="contact__header">
           <div>
             <h1>Contacts</h1>
-            <p>People you orbit with — {allContacts.length} connections.</p>
+            <p>
+              People you orbit with —{" "}
+              {contactsResponseData?.totalRecords ?? allContacts.length}{" "}
+              connections.
+            </p>
           </div>
           <Button
             className="add-btn"
@@ -253,7 +281,7 @@ const Contact = () => {
         <div className="contact__controls">
           <Tabs
             value={tab}
-            onChange={(_, v) => setTab(v)}
+            onChange={(_, v) => handleTabChange(v)}
             className="custom-tabs"
           >
             <Tab label="All" />
@@ -278,13 +306,26 @@ const Contact = () => {
             {isFetchingContacts || isFetchingOnlineContacts ? (
               <Loader />
             ) : contacts.length > 0 ? (
-              <div className="contact__grid">
-                {contacts.map((contact) => (
-                  <Orbitcard key={contact.id} user={contact} />
-                ))}
-              </div>
+              <>
+                <div className="contact__grid">
+                  {contacts.map((contact) => (
+                    <Orbitcard key={contact.id} user={contact} />
+                  ))}
+                </div>
+                {contactsPageCount > 1 && (
+                  <div className="contact__pagination">
+                    <Pagination
+                      count={contactsPageCount}
+                      page={contactsPage}
+                      onChange={(_, value) => setContactsPage(value)}
+                      color="primary"
+                      shape="rounded"
+                    />
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="empty-request-state">No contacts found</div>
+              <div className="empty-request-state mt-4">No contacts found</div>
             )}
           </>
         )}
@@ -301,9 +342,20 @@ const Contact = () => {
                   <>
                     {sendRequestsResponseData?.data?.map((user, i) => (
                       // <Grid  size={{ xs: 12, sm: 6, md: 3 }} key={i}>
-                      <RequestCard userData={user} tab={tab} />
+                      <RequestCard key={i} userData={user} tab={tab} />
                       // </Grid>
                     ))}
+                    {sentRequestsPageCount > 1 && (
+                      <div className="contact__pagination">
+                        <Pagination
+                          count={sentRequestsPageCount}
+                          page={requestsPage}
+                          onChange={(_, value) => setRequestsPage(value)}
+                          color="primary"
+                          shape="rounded"
+                        />
+                      </div>
+                    )}
                     </>
                   // </Grid>
                 ) : (
@@ -319,17 +371,30 @@ const Contact = () => {
                 {isFetchingReceived ? (
                   <Loader />
                 ) : (requestResponseData?.data?.length ?? 0) > 0 ? (
-                  requestResponseData?.data?.map((user, i) => (
-                    <RequestCard
-                      key={i}
-                      userData={user}
-                      tab={tab}
-                      onAccept={handleAcceptRequest}
-                      onReject={handleRejectRequest}
-                      isAccepting={isAccepting}
-                      isRejecting={isRejecting}
-                    />
-                  ))
+                  <>
+                    {requestResponseData?.data?.map((user, i) => (
+                      <RequestCard
+                        key={i}
+                        userData={user}
+                        tab={tab}
+                        onAccept={handleAcceptRequest}
+                        onReject={handleRejectRequest}
+                        isAccepting={isAccepting}
+                        isRejecting={isRejecting}
+                      />
+                    ))}
+                    {receivedRequestsPageCount > 1 && (
+                      <div className="contact__pagination">
+                        <Pagination
+                          count={receivedRequestsPageCount}
+                          page={requestsPage}
+                          onChange={(_, value) => setRequestsPage(value)}
+                          color="primary"
+                          shape="rounded"
+                        />
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="empty-request-state">
                     No received requests found

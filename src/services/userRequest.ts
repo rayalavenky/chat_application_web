@@ -14,6 +14,7 @@ interface ContactsResponse {
   }[];
   message: string;
   status: string;
+  totalRecords: number;
 }
 
 interface ReceivedRequestResponse {
@@ -35,6 +36,7 @@ interface ReceivedRequestResponse {
   }[];
   message: string;
   status: string;
+  totalRecords: number;
 }
 
 export const userRequest = api.injectEndpoints({
@@ -48,17 +50,25 @@ export const userRequest = api.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
 
-    getReceivedRequests: builder.query<ReceivedRequestResponse,{userId: string;}>({
-      query: ({ userId }) => ({
+    getReceivedRequests: builder.query<
+      ReceivedRequestResponse,
+      { userId: string; page?: number; limit?: number }
+    >({
+      query: ({ userId, page = 1, limit = 10 }) => ({
         url: `users/requests/received/${userId}`,
+        params: { page, limit },
         method: "GET",
       }),
       providesTags: ["ReceivedRequest"],
     }),
 
-    getSendRequests: builder.query<ReceivedRequestResponse,{userId: string;}>({
-      query: ({ userId }) => ({
+    getSendRequests: builder.query<
+      ReceivedRequestResponse,
+      { userId: string; page?: number; limit?: number }
+    >({
+      query: ({ userId, page = 1, limit = 10 }) => ({
         url: `users/requests/sent/${userId}`,
+        params: { page, limit },
         method: "GET",
       }),
     }),
@@ -71,9 +81,13 @@ export const userRequest = api.injectEndpoints({
       invalidatesTags: ["ReceivedRequest"],
     }),
 
-    getUserContacts: builder.query<ContactsResponse, { userId: string }>({
-      query: ({ userId }) => ({
+    getUserContacts: builder.query<
+      ContactsResponse,
+      { userId: string; page?: number; limit?: number }
+    >({
+      query: ({ userId, page = 1, limit = 10 }) => ({
         url: `users/contacts/${userId}`,
+        params: { page, limit },
         method: "GET",
       }),
       // providesTags: ["Users"],
@@ -87,9 +101,13 @@ export const userRequest = api.injectEndpoints({
       invalidatesTags: ["ReceivedRequest"],
     }),
 
-    getOnlineContacts: builder.query<ContactsResponse, { userId: string }>({
-      query: ({ userId }) => ({
+    getOnlineContacts: builder.query<
+      ContactsResponse,
+      { userId: string; page?: number; limit?: number }
+    >({
+      query: ({ userId, page = 1, limit = 10 }) => ({
         url: `users/contacts/${userId}/online`,
+        params: { page, limit },
         method: "GET",
       }),
     }),
