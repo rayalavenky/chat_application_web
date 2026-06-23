@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import SearchIcon from "@mui/icons-material/Search";
 import { useLazyGetUsersQuery } from "../../services/userApi";
 import {
+  userRequest,
   useAcceptConnectionRequestMutation,
   useGetReceivedRequestsQuery,
   useGetSendRequestsQuery,
@@ -25,12 +26,14 @@ import {
   useSendConnectionRequestMutation,
   useGetOnlineContactsQuery,
 } from "../../services/userRequest";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch } from "../../store/store";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import { onSocketMessage } from "../../services/socket";
 
 const Contact = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const currentUser = useSelector((state: any) => state.user.userData);
   const [tab, setTab] = useState<any>(0);
   const [open, setOpen] = useState<boolean>(false);
@@ -239,15 +242,158 @@ const Contact = () => {
 
       case "new_request":
         toast.success("New Request Received");
+        // Add the incoming request to the receiver's "Requests Received" list.
+        if (data.request) {
+          dispatch(
+            userRequest.util.updateQueryData(
+              "getReceivedRequests",
+              { userId: currentUser.id },
+              (draft: any) => {
+                if (!draft.data) draft.data = [];
+                const exists = draft.data.some(
+                  (r: any) => r.requestId === data.request.requestId,
+                );
+                if (!exists) draft.data.unshift(data.request);
+              },
+            ),
+          );
+        }
         break;
 
       case "request_accepted":
         toast.success("Request Accepted");
+        // Flip the sender's sent-request status to accepted...
+        if (data.requestId) {
+          dispatch(
+            userRequest.util.updateQueryData(
+              "getSendRequests",
+              { userId: currentUser.id },
+              (draft: any) => {
+                const item = draft.data?.find(
+                  (r: any) => r.requestId === data.requestId,
+                );
+                if (item) item.status = "accepted";
+              },
+            ),
+          );
+        }
+        // ...and add the new contact to the sender's contacts list.
+        if (data.contact) {
+          dispatch(
+            userRequest.util.updateQueryData(
+              "getUserContacts",
+              { userId: currentUser.id },
+              (draft: any) => {
+                if (!draft.data) draft.data = [];
+                const exists = draft.data.some(
+                  (c: any) => c.id === data.contact.id,
+                );
+                if (!exists) draft.data.unshift(data.contact);
+              },
+            ),
+          );
+          // Only the online tab lists online contacts, so patch it only when
+          // the new contact is currently online.
+          if (data.contact.isOnline) {
+            dispatch(
+              userRequest.util.updateQueryData(
+                "getOnlineContacts",
+                { userId: currentUser.id },
+                (draft: any) => {
+                  if (!draft.data) draft.data = [];
+                  const exists = draft.data.some(
+                    (c: any) => c.id === data.contact.id,
+                  );
+                  if (!exists) draft.data.unshift(data.contact);
+                },
+              ),
+            );
+          }
+        }
         break;
 
       case "request_rejected":
         toast.error("Request Rejected");
+        // Flip the sender's sent-request status to rejected.
+        if (data.requestId) {
+          dispatch(
+            userRequest.util.updateQueryData(
+              "getSendRequests",
+              { userId: currentUser.id },
+              (draft: any) => {
+                const item = draft.data?.find(
+                  (r: any) => r.requestId === data.requestId,
+                );
+                if (item) item.status = "rejected";
+              },
+            ),
+          );
+        }
         break;
+
+      case "presence": {
+        // A contact came online / went offline.
+        const contactId = data.userId;
+        const isOnline = data.isOnline;
+
+        // Update the online dot on the All-contacts list.
+        dispatch(
+          userRequest.util.updateQueryData(
+            "getUserContacts",
+            { userId: currentUser.id },
+            (draft: any) => {
+              const c = draft.data?.find(
+                (c: any) => c.contactUserId === contactId,
+              );
+              if (c) c.isOnline = isOnline;
+            },
+          ),
+        );
+
+        if (isOnline) {
+          // Add them to the Online tab, copying the row from the All cache.
+          dispatch((_dispatch, getState) => {
+            const allContacts = userRequest.endpoints.getUserContacts.select({
+              userId: currentUser.id,
+            })(getState() as any);
+
+            const contact = allContacts?.data?.data?.find(
+              (c: any) => c.contactUserId === contactId,
+            );
+            if (!contact) return;
+
+            dispatch(
+              userRequest.util.updateQueryData(
+                "getOnlineContacts",
+                { userId: currentUser.id },
+                (draft: any) => {
+                  if (!draft.data) draft.data = [];
+                  const exists = draft.data.some(
+                    (c: any) => c.id === contact.id,
+                  );
+                  if (!exists) draft.data.unshift({ ...contact, isOnline: true });
+                },
+              ),
+            );
+          });
+        } else {
+          // Remove them from the Online tab.
+          dispatch(
+            userRequest.util.updateQueryData(
+              "getOnlineContacts",
+              { userId: currentUser.id },
+              (draft: any) => {
+                if (draft.data) {
+                  draft.data = draft.data.filter(
+                    (c: any) => c.contactUserId !== contactId,
+                  );
+                }
+              },
+            ),
+          );
+        }
+        break;
+      }
 
       default:
         break;
@@ -256,7 +402,7 @@ const Contact = () => {
 
   return unsubscribe;
 
-}, []);
+}, [dispatch, currentUser.id]);
   return (
     <>
       {(isAccepting || isRejecting) && <Loader />}

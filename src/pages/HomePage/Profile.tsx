@@ -15,6 +15,7 @@ import { useLogoutMutation } from "../../services/AuthApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
+import { disconnectSocket } from "../../services/socket";
 
 
 const Profile = () => {
@@ -246,6 +247,7 @@ const Profile = () => {
     } catch (err) {
       console.log("Logout error", err);
     } finally {
+      disconnectSocket(); // stop reconnects + events for the logged-out user
       sessionStorage.clear(); // clear AFTER request
       navigate("/");
     }
