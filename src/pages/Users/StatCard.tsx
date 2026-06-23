@@ -17,6 +17,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, type }) => {
         {type === 'active' && <GroupAddOutlinedIcon className="stat-icon"/>}
         {type === 'suspended' && <GroupRemoveOutlinedIcon className="stat-icon"/>}
         {type === 'pending' && <EmailOutlinedIcon className="stat-icon"/>}
+        {type === 'online' && <GroupAddOutlinedIcon className="stat-icon"/>}
+        {type === 'offline' && <GroupRemoveOutlinedIcon className="stat-icon"/>}
       </div>
       <div>
         <h2>{count}</h2>

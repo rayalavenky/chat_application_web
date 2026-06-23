@@ -5,15 +5,47 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
- background:
-    radial-gradient(circle at 20% 10%, rgba(124, 77, 255, 0.18), transparent 40%),
-    radial-gradient(circle at 80% 0%, rgba(168, 85, 247, 0.18), transparent 45%),
-    radial-gradient(1px 1px at 12% 22%, rgba(255, 255, 255, 0.6), transparent 60%),
-    radial-gradient(1px 1px at 32% 60%, rgba(255, 255, 255, 0.4), transparent 60%),
-    radial-gradient(1.2px 1.2px at 55% 18%, rgba(255, 255, 255, 0.55), transparent 60%),
-    radial-gradient(1px 1px at 72% 72%, rgba(255, 255, 255, 0.5), transparent 60%),
-    radial-gradient(1px 1px at 88% 30%, rgba(255, 255, 255, 0.4), transparent 60%),
-    radial-gradient(1.5px 1.5px at 45% 85%, rgba(255, 255, 255, 0.45), transparent 60%),
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(124, 77, 255, 0.18),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(168, 85, 247, 0.18),
+      transparent 45%
+    ),
+    radial-gradient(
+      1px 1px at 12% 22%,
+      rgba(255, 255, 255, 0.6),
+      transparent 60%
+    ),
+    radial-gradient(
+      1px 1px at 32% 60%,
+      rgba(255, 255, 255, 0.4),
+      transparent 60%
+    ),
+    radial-gradient(
+      1.2px 1.2px at 55% 18%,
+      rgba(255, 255, 255, 0.55),
+      transparent 60%
+    ),
+    radial-gradient(
+      1px 1px at 72% 72%,
+      rgba(255, 255, 255, 0.5),
+      transparent 60%
+    ),
+    radial-gradient(
+      1px 1px at 88% 30%,
+      rgba(255, 255, 255, 0.4),
+      transparent 60%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 45% 85%,
+      rgba(255, 255, 255, 0.45),
+      transparent 60%
+    ),
     linear-gradient(180deg, #150a35 0%, #0a0418 60%, #05010d 100%);
 
   &__header {
@@ -45,7 +77,7 @@
 
   &__stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin: 16px 0;
   }
@@ -84,6 +116,14 @@
   &.pending {
     border-left: 3px solid #ffaa00;
   }
+
+  &.online {
+    border-left: 3px solid #00ffcc;
+  }
+
+  &.offline {
+    border-left: 3px solid #ff4d6d;
+  }
 }
 
 .stat-icon-wrapper {
@@ -92,7 +132,7 @@
   border-radius: 20%;
   display: flex;
   align-items: center;
-        color: #945af2;
+  color: #945af2;
   background: #6366f126;
 
   font-size: 25px;
@@ -101,7 +141,6 @@
   &.active {
     color: #00ffcc;
     background: #00ffcc26;
-
   }
 
   &.suspended {
@@ -114,7 +153,15 @@
     background: #ffaa0026;
   }
 
+  &.online {
+    color: #00ffcc;
+    background: #00ffcc26;
+  }
 
+  &.offline {
+    color: #ff4d6d;
+    background: #ff4d6d26;
+  }
 }
 
 /* Table */
@@ -234,7 +281,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-            font-size: 12px;
+      font-size: 12px;
 
       // font-weight: bold;
     }
@@ -268,43 +315,42 @@
 }
 
 .tabs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
 
-    .search {
-      width: 300px;
+  .search {
+    width: 300px;
 
-      input {
-        color: white;
-      }
+    input {
+      color: white;
     }
+  }
 
-    .MuiTabs-indicator {
+  .MuiTabs-indicator {
     display: none !important;
   }
 
   .MuiTabs-root {
     min-height: 0;
-      .MuiTab-root {
-        color: #aaa;
-        text-transform: none;
-        border-bottom: none !important;
-      }
-
-      .Mui-selected {
-        color: #fff !important;
-        border-radius: 50px;
-        background: linear-gradient(135deg, #7c4dff, #5e35b1);
-        box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
-        border-bottom: none !important;
-
-      }
+    .MuiTab-root {
+      color: #aaa;
+      text-transform: none;
+      border-bottom: none !important;
     }
+
+    .Mui-selected {
+      color: #fff !important;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #7c4dff, #5e35b1);
+      box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
+      border-bottom: none !important;
+    }
+  }
 }
 .users__pagination {
   display: flex;

@@ -103,11 +103,11 @@ export const userRequest = api.injectEndpoints({
 
     getOnlineContacts: builder.query<
       ContactsResponse,
-      { userId: string; page?: number; limit?: number }
+      { userId?: string; isAdmin?: boolean; page?: number; limit?: number }
     >({
-      query: ({ userId, page = 1, limit = 10 }) => ({
+      query: ({ userId, isAdmin = false, page = 1, limit = 10 }) => ({
         url: `users/contacts/${userId}/online`,
-        params: { page, limit },
+        params: { isAdmin, page, limit },
         method: "GET",
       }),
     }),

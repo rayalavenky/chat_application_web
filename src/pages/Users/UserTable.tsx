@@ -1,15 +1,13 @@
 import { Tab, Tabs } from "@mui/material";
-import React, {  useState } from "react";
-
-
+import React, { useState } from "react";
 
 interface UserTableProps {
   data?: any;
+  onTabChange?: (tab: number) => void;
 }
 
-const UserTable: React.FC<UserTableProps> = ({ data }) => {
+const UserTable: React.FC<UserTableProps> = ({ data, onTabChange }) => {
   const [tab, setTab] = useState<any>(0);
-
 
   return (
     <div className="user-table">
@@ -17,13 +15,14 @@ const UserTable: React.FC<UserTableProps> = ({ data }) => {
         <div className="tabs">
           <Tabs
             value={tab}
-            onChange={(_, v) => setTab(v)}
+            onChange={(_, v) => {
+              setTab(v);
+              onTabChange && onTabChange(v);
+            }}
             className="custom-tabs"
           >
             <Tab label="All" />
             <Tab label="Online" />
-            <Tab label="Requests" />
-            <Tab label="Blocked" />
           </Tabs>
         </div>
       </div>
@@ -57,13 +56,18 @@ const UserTable: React.FC<UserTableProps> = ({ data }) => {
             <col style={{ width: "14%" }} />
           </colgroup>
           <tbody>
-            {data?.map((user:any, index: number) => (
+            {data?.map((user: any, index: number) => (
               <tr key={index}>
                 <td>
                   <div className="user-info">
-                    <div className="avatar">{user.firstName.charAt(0)}{user?.lastName?.charAt(0)}</div>
+                    <div className="avatar">
+                      {user.firstName.charAt(0)}
+                      {user?.lastName?.charAt(0)}
+                    </div>
                     <div>
-                      <p>{user.firstName} {user.lastName}</p>
+                      <p>
+                        {user.firstName} {user.lastName}
+                      </p>
                     </div>
                   </div>
                 </td>
@@ -73,7 +77,11 @@ const UserTable: React.FC<UserTableProps> = ({ data }) => {
                 <td>{user.bio ? user.bio : "-"}</td>
 
                 <td>
-                  <span className={`status ${user.isOnline ? "active" : "pending"}`}>{user.isOnline ? "Online" : "Offline"}</span>
+                  <span
+                    className={`status ${user.isOnline ? "active" : "pending"}`}
+                  >
+                    {user.isOnline ? "Online" : "Offline"}
+                  </span>
                 </td>
               </tr>
             ))}
